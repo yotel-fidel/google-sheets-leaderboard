@@ -38,11 +38,11 @@ const Leaderboard = () => {
               </div>
               <div className="person-image-container flex items-center">
                 <div className="image-container w-12 h-12 rounded-full overflow-hidden mr-4">
-                  <img 
+                  {/* <img 
                     src={`http://localhost/test-wp/wp-content/uploads/2024/05/${info.name.toLowerCase().replace(/\s/g, "_")}.webp`} 
                     alt={info.name} 
                     className="w-full h-full object-cover" 
-                  />
+                  /> */}
                 </div>
                 <p className="sales-person-name text-gray-700">{info.name}</p>
               </div>
