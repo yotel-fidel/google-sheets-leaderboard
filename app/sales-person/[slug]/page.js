@@ -1,21 +1,19 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import { useSheetData } from '../../context/SheetDataContext';
 
 const SalesPersonPage = ({ params }) => {
   const [salesPersonData, setSalesPersonData] = useState(null);
-  const sheetData = useSheetData();
 
   useEffect(() => {
     const fetchSalesInfo = async () => {
       try {
-        const response = await fetch('/api/getSheetDataByTotal');
-        const data = await response.json();
-        // Find the row corresponding to the provided slug
         const [firstName, lastName] = params.slug.split('_');
-        const foundRow = data.salesInfo.find(row => row.name.toLowerCase().includes(`${firstName} ${lastName}`));
-        setSalesPersonData(foundRow);
+        console.log("First name: ", firstName, "Last Name: ", lastName)
+        const response = await fetch(`/api/getSheetDataByPerson?firstName=${firstName}&lastName=${lastName}`);
+        const data = await response.json();
+
+        setSalesPersonData(data);
       } catch (error) {
         console.error("Error fetching sales info:", error);
       }
