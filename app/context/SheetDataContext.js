@@ -11,7 +11,7 @@ export const SheetDataProvider = ({ children }) => {
       try {
         const response = await fetch('/api/getSheetData');
         const newData = await response.json();
-        console.log("Fetched data:", newData); // Add this line
+        // console.log("Fetched data:", newData); // Add this line
         setData(newData);
       } catch (error) {
         console.error("Error fetching data:", error);

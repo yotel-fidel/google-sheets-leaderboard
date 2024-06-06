@@ -23,7 +23,7 @@ const Leaderboard = () => {
   return (
     <div className="leaderboard-container max-w-4xl mx-auto p-4 bg-gray-100 rounded-lg shadow-lg">
       <h1 className="text-2xl text-black font-bold text-center mb-6">Sales Leaderboard by Total</h1>
-      {salesInfo.map((info, index) => (
+      {salesInfo && salesInfo.map((info, index) => (
         <Link 
           key={index} 
           href={`/sales-person/${info.name.toLowerCase().replace(/\s/g, "_")}`}
