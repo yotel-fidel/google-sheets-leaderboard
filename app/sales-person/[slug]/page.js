@@ -12,6 +12,7 @@ import {
   Legend,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
+import Loading from '@/app/components/Loading';
 
 ChartJS.register(
   CategoryScale,
@@ -40,6 +41,7 @@ const SalesPersonPage = ({ params }) => {
   const [bookedDemsData, setBookedDemsData] = useState(null);
   const [bookedMDSData, setBookedMDSData] = useState(null);
   const [bookedDemsDataGraph, setBookedDemsDataGraph] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchSalesInfo = async () => {
@@ -62,6 +64,7 @@ const SalesPersonPage = ({ params }) => {
             },
           ],
         })
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching sales info:", error);
       }
@@ -74,10 +77,11 @@ const SalesPersonPage = ({ params }) => {
   return (
     <div className=" mx-auto p-4 bg-gray-100 rounded-lg shadow-lg">
       <h1 className="text-2xl text-black font-bold text-center mb-6">{bookedDemsData ? bookedDemsData.name : 'Sales Person'}</h1>
+      {loading && <Loading />}
       {bookedDemsData && (
         <div className="bg-white p-4 rounded-lg shadow-md">
           <h2 className="text-xl font-semibold text-gray-700">Team: {bookedDemsData.team}</h2>
-          <table className="min-w-full mt-4 text-black">
+          {/* <table className="min-w-full mt-4 text-black">
             <thead>
               <tr className="bg-gray-100">
                 <th className="px-6 py-3 text-left">Week</th>
@@ -92,7 +96,7 @@ const SalesPersonPage = ({ params }) => {
                 </tr>
               ))}
             </tbody>
-          </table>
+          </table> */}
           <div className="mt-4 text-xl font-semibold text-blue-600">
             Total Sales: {bookedDemsData.total}
           </div>

@@ -13,6 +13,7 @@ import {
   Legend,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
+import Loading from '@/app/components/Loading';
 
 ChartJS.register(
   CategoryScale,
@@ -40,6 +41,7 @@ export const options = {
 const SalesTeamPage = ({ params }) => {
   const [bookedDemsData, setBookedDemsData] = useState([]);
   const [bookedMDSData, setBookedMDSData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchsalesTeamData = async () => {
@@ -50,6 +52,7 @@ const SalesTeamPage = ({ params }) => {
 
         setBookedDemsData(data.bookedDemsData);
         setBookedMDSData(data.bookedMDSData);
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching sales info:", error);
       }
@@ -65,7 +68,7 @@ const SalesTeamPage = ({ params }) => {
       <div className='flex flex-wrap justify-between gap-2'>
         <div className='flex-1'>
           <h2 className="text-2xl text-black font-bold text-center mb-6">Sales Leaderboard (Booked Dems) Total</h2>
-
+          {loading && <Loading />}
           {bookedDemsData && bookedDemsData.map((info, index) => (
             <Link
               key={index}
@@ -115,7 +118,7 @@ const SalesTeamPage = ({ params }) => {
         </div>
         <div className='flex-1'>
           <h2 className="text-2xl text-black font-bold text-center mb-6">Sales Leaderboard (Booked MDS) Total</h2>
-
+          {loading && <Loading />}
           {bookedMDSData && bookedMDSData.map((info, index) => (
             <Link
               key={index}
