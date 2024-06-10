@@ -11,7 +11,7 @@ export async function GET() {
   });
 
   const sheets = google.sheets({ version: "v4", auth: await auth.getClient() });
-  const range = "2024!A:BB";
+  const range = "2024!A:BC";
 
 
   try {
@@ -23,9 +23,13 @@ export async function GET() {
     const extractedData = extractData(data);
     
     // Sort by Total in descending order
-    const sortedData = extractedData.salesInfo.sort((a, b) => b.total - a.total);
+    const sortedBookedDemsData = extractedData.salesBookedDems.sort((a, b) => b.total - a.total);
+    const sortedBookedMDSData = extractedData.salesBookedMDS.sort((a, b) => b.total - a.total);
 
-    return NextResponse.json({ salesInfo: sortedData });
+    return NextResponse.json({ 
+      bookedDemsData: sortedBookedDemsData,
+      bookedMDSData: sortedBookedMDSData
+    });
   } catch (error) {
     console.error("Error fetching sheets data: ", error);
     return NextResponse.json({ error: 'Error fetching sheets data' }, { status: 500 });
@@ -33,37 +37,63 @@ export async function GET() {
 }
 
 const extractData = (data) => {
-  let salesInfoStart, salesInfoEnd;
-  let salesInfo = [];
+  let salesBookedDemsStart, salesBookedDemsEnd;
+  let salesBookedMDSStart, salesBookedMDSEnd;
+  let salesBookedDems = [];
+  let salesBookedMDS = [];
 
   let i = 0;
   while (i < data.length) {
     if (data[i][0] === "END") break;
 
-    if (data[i][0] === "Booked Start") {
-      salesInfoStart = i + 2;
+    if (data[i][0] === "Booked Dems Start") {
+      salesBookedDemsStart = i + 2;
     }
 
-    if (data[i][0] === "Booked End") {
-      salesInfoEnd = i - 1;
+    if (data[i][0] === "Booked Dems End") {
+      salesBookedDemsEnd = i - 1;
+    }
+
+    if (data[i][0] === "Booked MDS Start") {
+      salesBookedMDSStart = i + 2;
+    }
+
+    if (data[i][0] === "Booked MDS End") {
+      salesBookedMDSEnd = i - 1;
     }
     i++;
   }
 
-  let start = salesInfoStart;
-  let end = salesInfoEnd;
+  let start = salesBookedDemsStart;
+  let end = salesBookedDemsEnd;
   for (; start <= end && start < data.length; start++) {
-    const [name, team, ...salesData] = data[start]
+    const [name, profileImg, team, ...salesData] = data[start]
     const total = salesData.reduce((sum, weekSales) => sum + Number(weekSales), 0);
 
-    salesInfo.push({
+    salesBookedDems.push({
       name,
+      profileImg,
       team,
       sales: salesData,
       total,
     });
   }
 
-  return { salesInfo };
+  start = salesBookedMDSStart;
+  end = salesBookedMDSEnd;
+  for (; start <= end && start < data.length; start++) {
+    const [name, profileImg, team, ...salesData] = data[start]
+    const total = salesData.reduce((sum, weekSales) => sum + Number(weekSales), 0);
+
+    salesBookedMDS.push({
+      name,
+      profileImg,
+      team,
+      sales: salesData,
+      total,
+    });
+  }
+
+  return { salesBookedDems, salesBookedMDS };
 };
 
