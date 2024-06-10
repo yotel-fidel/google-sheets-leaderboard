@@ -2,43 +2,43 @@
 
 import React, { useState, useEffect } from 'react';
 import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
-    Tooltip,
-    Legend,
-  } from 'chart.js';
-  import { Line } from 'react-chartjs-2';
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import { Line } from 'react-chartjs-2';
 
-  ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
-    Tooltip,
-    Legend
-  );
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
-  export const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: 'top',
-      },
-      title: {
-        display: true,
-        text: 'Booked Dems Chart',
-      },
+export const options = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: 'top',
     },
-  };
+    title: {
+      display: true,
+      text: 'Booked Dems Chart',
+    },
+  },
+};
 
 const SalesPersonPage = ({ params }) => {
-  const [bookedDemsData, setBookedDemsData] = useState([]);
-  const [bookedMDSData, setBookedMDSData] = useState([]);
+  const [bookedDemsData, setBookedDemsData] = useState(null);
+  const [bookedMDSData, setBookedMDSData] = useState(null);
   const [bookedDemsDataGraph, setBookedDemsDataGraph] = useState(null);
 
   useEffect(() => {
@@ -52,16 +52,16 @@ const SalesPersonPage = ({ params }) => {
         setBookedDemsData(data.bookedDemsData);
         setBookedMDSData(data.bookedMDSData);
         setBookedDemsDataGraph({
-            labels: data.bookedDemsData.sales.map((week, index) => `Week ${index + 1}`),
-            datasets: [
-              {
-                label: 'Booked Dems',
-                data: data.bookedDemsData.sales,
-                borderColor: 'rgb(255, 99, 132)',
-                backgroundColor: 'rgba(255, 99, 132, 0.5)',
-              },
-            ],
-          })
+          labels: data.bookedDemsData.sales.map((week, index) => `Week ${index + 1}`),
+          datasets: [
+            {
+              label: 'Booked Dems',
+              data: data.bookedDemsData.sales,
+              borderColor: 'rgb(255, 99, 132)',
+              backgroundColor: 'rgba(255, 99, 132, 0.5)',
+            },
+          ],
+        })
       } catch (error) {
         console.error("Error fetching sales info:", error);
       }
