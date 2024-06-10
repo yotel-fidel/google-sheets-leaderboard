@@ -30,10 +30,14 @@ export async function GET(request) {
     // Sort by Total in descending order
     const sortedBookedDemsData = filteredData.salesBookedDems.sort((a, b) => b.total - a.total);
     const sortedBookedMDSData = filteredData.salesBookedMDS.sort((a, b) => b.total - a.total);
+    const sortedSatDemsData = filteredData.salesSatDems.sort((a, b) => b.total - a.total);
+    const sortedSatMDSData = filteredData.salesSatMDS.sort((a, b) => b.total - a.total);
 
     return NextResponse.json({
       bookedDemsData: sortedBookedDemsData,
-      bookedMDSData: sortedBookedMDSData
+      bookedMDSData: sortedBookedMDSData,
+      satDemsData: sortedSatDemsData,
+      satMDSData: sortedSatMDSData,
     });
   } catch (error) {
     console.error("Error fetching sheets data: ", error);
@@ -44,8 +48,12 @@ export async function GET(request) {
 const extractAndFilterData = (data, teamParam) => {
   let salesBookedDemsStart, salesBookedDemsEnd;
   let salesBookedMDSStart, salesBookedMDSEnd;
+  let salesSatDemsStart, salesSatDemsEnd;
+  let salesSatMDSStart, salesSatMDSEnd;
   let salesBookedDems = [];
   let salesBookedMDS = [];
+  let salesSatDems = [];
+  let salesSatMDS = [];
 
   let i = 0;
   while (i < data.length) {
@@ -65,6 +73,22 @@ const extractAndFilterData = (data, teamParam) => {
 
     if (data[i][0] === "Booked MDS End") {
       salesBookedMDSEnd = i - 1;
+    }
+
+    if (data[i][0] === "Sat Dems Start") {
+      salesSatDemsStart = i + 2;
+    }
+
+    if (data[i][0] === "Sat Dems End") {
+      salesSatDemsEnd = i - 1;
+    }
+
+    if (data[i][0] === "Sat MDS Start") {
+      salesSatMDSStart = i + 2;
+    }
+
+    if (data[i][0] === "Sat MDS End") {
+      salesSatMDSEnd = i - 1;
     }
     i++;
   }
@@ -101,5 +125,37 @@ const extractAndFilterData = (data, teamParam) => {
     }
   }
 
-  return { salesBookedDems, salesBookedMDS };
+  start = salesSatDemsStart;
+  end = salesSatDemsEnd;
+  for (; start <= end && start < data.length; start++) {
+    const [name, profileImg, team, ...salesData] = data[start];
+    const total = salesData.reduce((sum, weekSales) => sum + Number(weekSales), 0);
+    if (!teamParam || team.toLowerCase() === teamParam.toLowerCase()) { // Filter by team if specified
+      salesSatDems.push({
+        name,
+        profileImg,
+        team,
+        sales: salesData,
+        total
+      });
+    }
+  }
+
+  start = salesSatMDSStart;
+  end = salesSatMDSEnd;
+  for (; start <= end && start < data.length; start++) {
+    const [name, profileImg, team, ...salesData] = data[start];
+    const total = salesData.reduce((sum, weekSales) => sum + Number(weekSales), 0);
+    if (!teamParam || team.toLowerCase() === teamParam.toLowerCase()) { // Filter by team if specified
+      salesSatMDS.push({
+        name,
+        profileImg,
+        team,
+        sales: salesData,
+        total
+      });
+    }
+  }
+
+  return { salesBookedDems, salesBookedMDS, salesSatDems, salesSatMDS };
 };
