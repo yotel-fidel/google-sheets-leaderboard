@@ -25,9 +25,13 @@ export async function GET(request) {
     const data = response.data.values;
     const filteredData = extractAndFilterData(data, teamParam);
 
+    // Sort by Total in descending order
+    const sortedBookedDemsData = filteredData.salesBookedDems.sort((a, b) => b.total - a.total);
+    const sortedBookedMDSData = filteredData.salesBookedMDS.sort((a, b) => b.total - a.total);
+
     return NextResponse.json({ 
-      bookedDemsData: filteredData.salesBookedDems,
-      bookedMDSData: filteredData.salesBookedMDS
+      bookedDemsData: sortedBookedDemsData,
+      bookedMDSData: sortedBookedMDSData
     });
   } catch (error) {
     console.error("Error fetching sheets data: ", error);
