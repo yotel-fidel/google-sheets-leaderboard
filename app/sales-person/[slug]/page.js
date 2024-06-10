@@ -24,7 +24,7 @@ ChartJS.register(
   Legend
 );
 
-export const options = {
+export const optionsBookedDems = {
   responsive: true,
   plugins: {
     legend: {
@@ -36,11 +36,52 @@ export const options = {
     },
   },
 };
+export const optionsBookedMDS = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: 'top',
+    },
+    title: {
+      display: true,
+      text: 'Booked MDS Chart',
+    },
+  },
+};
+export const optionsSatDems = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: 'top',
+    },
+    title: {
+      display: true,
+      text: 'Sat Dems Chart',
+    },
+  },
+};
+export const optionsSatMDS = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: 'top',
+    },
+    title: {
+      display: true,
+      text: 'Sat MDS Chart',
+    },
+  },
+};
 
 const SalesPersonPage = ({ params }) => {
   const [bookedDemsData, setBookedDemsData] = useState(null);
   const [bookedMDSData, setBookedMDSData] = useState(null);
+  const [satDemsData, setSatDemsData] = useState(null);
+  const [satMDSData, setSatMDSData] = useState(null);
   const [bookedDemsDataGraph, setBookedDemsDataGraph] = useState(null);
+  const [bookedMDSDataGraph, setBookedMDSDataGraph] = useState(null);
+  const [satDemsDataGraph, setSatDemsDataGraph] = useState(null);
+  const [satMDSDataGraph, setSatMDSDataGraph] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -53,12 +94,47 @@ const SalesPersonPage = ({ params }) => {
 
         setBookedDemsData(data.bookedDemsData);
         setBookedMDSData(data.bookedMDSData);
+        setSatDemsData(data.satDemsData);
+        setSatMDSData(data.satMDSData);
         setBookedDemsDataGraph({
           labels: data.bookedDemsData.sales.map((week, index) => `Week ${index + 1}`),
           datasets: [
             {
               label: 'Booked Dems',
               data: data.bookedDemsData.sales,
+              borderColor: 'rgb(255, 99, 132)',
+              backgroundColor: 'rgba(255, 99, 132, 0.5)',
+            },
+          ],
+        })
+        setBookedMDSDataGraph({
+          labels: data.bookedMDSData.sales.map((week, index) => `Week ${index + 1}`),
+          datasets: [
+            {
+              label: 'Booked MDS',
+              data: data.bookedMDSData.sales,
+              borderColor: 'rgb(255, 99, 132)',
+              backgroundColor: 'rgba(255, 99, 132, 0.5)',
+            },
+          ],
+        })
+        setSatDemsDataGraph({
+          labels: data.satDemsData.sales.map((week, index) => `Week ${index + 1}`),
+          datasets: [
+            {
+              label: 'Sat Dems',
+              data: data.satDemsData.sales,
+              borderColor: 'rgb(255, 99, 132)',
+              backgroundColor: 'rgba(255, 99, 132, 0.5)',
+            },
+          ],
+        })
+        setSatMDSDataGraph({
+          labels: data.satMDSData.sales.map((week, index) => `Week ${index + 1}`),
+          datasets: [
+            {
+              label: 'Sat Dems',
+              data: data.satMDSData.sales,
               borderColor: 'rgb(255, 99, 132)',
               backgroundColor: 'rgba(255, 99, 132, 0.5)',
             },
@@ -76,7 +152,16 @@ const SalesPersonPage = ({ params }) => {
   // Render the component based on the found data
   return (
     <div className=" mx-auto p-4 bg-gray-100 rounded-lg shadow-lg">
-      <h1 className="text-2xl text-black font-bold text-center mb-6">{bookedDemsData ? bookedDemsData.name : 'Sales Person'}</h1>
+      <div className='flex gap-[10px] items-end mb-3'>
+        {bookedDemsData && bookedDemsData.profileImg && <img
+          src={`https://drive.google.com/thumbnail?id=${bookedDemsData.profileImg}&sz=w150`}
+          alt={bookedDemsData.name}
+          className="w-[150px] h-[150px] rounded-lg shadow-md object-cover"
+          referrerPolicy="no-referrer"
+        />}
+        <h1 className="text-2xl text-black font-bold text-center">{bookedDemsData && bookedDemsData.name}</h1>
+      </div>
+
       {loading && <Loading />}
       {bookedDemsData && (
         <div className="bg-white p-4 rounded-lg shadow-md">
@@ -97,11 +182,53 @@ const SalesPersonPage = ({ params }) => {
               ))}
             </tbody>
           </table> */}
-          <div className="mt-4 text-xl font-semibold text-blue-600">
-            Total Sales: {bookedDemsData.total}
-          </div>
 
-          {bookedDemsDataGraph && <Line options={options} data={bookedDemsDataGraph} />}
+          <div className='grid md:grid-cols-2'>
+            <div className='flex-1'>
+              <div className="mt-4 text-xl font-semibold text-blue-600">
+                Total Booked Dems: {bookedDemsData.total}
+              </div>
+
+              {bookedDemsDataGraph && (
+                <div className=''>
+                  <Line options={optionsBookedDems} data={bookedDemsDataGraph} />
+                </div>
+              )}
+            </div>
+
+
+            <div className='flex-1'>
+              <div className="mt-4 text-xl font-semibold text-blue-600">
+                Total Booked Dems: {bookedMDSData.total}
+              </div>
+              {bookedMDSDataGraph && (
+                <div className=''>
+                  <Line options={optionsBookedMDS} data={bookedMDSDataGraph} />
+                </div>
+              )}
+            </div>
+
+            <div className='flex-1'>
+              <div className="mt-4 text-xl font-semibold text-blue-600">
+                Total Sat Dems: {satDemsData.total}
+              </div>
+              {bookedMDSDataGraph && (
+                <div className=''>
+                  <Line options={optionsSatDems} data={satDemsDataGraph} />
+                </div>
+              )}
+            </div>
+            <div className='flex-1'>
+              <div className="mt-4 text-xl font-semibold text-blue-600">
+                Total Sat MDS: {satMDSData.total}
+              </div>
+              {bookedMDSDataGraph && (
+                <div className=''>
+                  <Line options={optionsSatMDS} data={satMDSDataGraph} />
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       )}
     </div>
