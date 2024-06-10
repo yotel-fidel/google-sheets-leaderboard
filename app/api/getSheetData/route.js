@@ -11,7 +11,7 @@ export async function GET() {
   });
 
   const sheets = google.sheets({ version: "v4", auth: await auth.getClient() });
-  const range = "2024!A:BB";
+  const range = "2024!A:BC";
 
   try {
     const response = await sheets.spreadsheets.values.get({
@@ -27,31 +27,31 @@ export async function GET() {
 }
 
 const extractData = (data) => {
-  let salesInfoStart, salesInfoEnd;
-  let salesInfo = [];
+  let salesBookedDemsStart, salesBookedDemsEnd;
+  let salesBookedDems = [];
 
   let i = 0;
   while (true) {
     if (data[i][0] === "END") break;
 
-    if (data[i][0] === "Booked Start") {
-      salesInfoStart = i + 2;
+    if (data[i][0] === "Booked Dems Start") {
+      salesBookedDemsStart = i + 2;
     }
 
-    if (data[i][0] === "Booked End") {
-      salesInfoEnd = i - 1;
+    if (data[i][0] === "Booked Dems End") {
+      salesBookedDemsEnd = i - 1;
     }
     i++;
   }
 
-  let start = salesInfoStart;
-  let end = salesInfoEnd;
+  let start = salesBookedDemsStart;
+  let end = salesBookedDemsEnd;
   for (; start <= end; start++) {
-    salesInfo.push({
+    salesBookedDems.push({
       name: data[start][0],
       team: data[start][1],
     });
   }
 
-  return { salesInfo };
+  return { salesBookedDems };
 };
