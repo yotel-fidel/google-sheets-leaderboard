@@ -1,10 +1,12 @@
 // File: pages/api/getSheetDataByTeam.js
 import { NextResponse } from 'next/server';
 import { google } from 'googleapis';
+import { getCurrentWeekAndYear } from '@/app/_utils';
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const teamParam = searchParams.get('team'); // Get the team query parameter
+  const { currentYear } = getCurrentWeekAndYear();
 
   const auth = new google.auth.GoogleAuth({
     credentials: {
@@ -15,7 +17,7 @@ export async function GET(request) {
   });
 
   const sheets = google.sheets({ version: "v4", auth: await auth.getClient() });
-  const range = "2024!A:BC";
+  const range = `${currentYear}!A:BC`;
 
   try {
     const response = await sheets.spreadsheets.values.get({
@@ -29,7 +31,7 @@ export async function GET(request) {
     const sortedBookedDemsData = filteredData.salesBookedDems.sort((a, b) => b.total - a.total);
     const sortedBookedMDSData = filteredData.salesBookedMDS.sort((a, b) => b.total - a.total);
 
-    return NextResponse.json({ 
+    return NextResponse.json({
       bookedDemsData: sortedBookedDemsData,
       bookedMDSData: sortedBookedMDSData
     });

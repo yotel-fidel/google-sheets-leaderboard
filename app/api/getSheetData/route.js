@@ -1,7 +1,9 @@
 import { NextResponse } from 'next/server';
 import { google } from 'googleapis';
+import { getCurrentWeekAndYear } from '@/app/_utils';
 
 export async function GET() {
+  const { currentYear } = getCurrentWeekAndYear();
   const auth = new google.auth.GoogleAuth({
     credentials: {
       client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
@@ -11,7 +13,7 @@ export async function GET() {
   });
 
   const sheets = google.sheets({ version: "v4", auth: await auth.getClient() });
-  const range = "2024!A:BC";
+  const range = `${currentYear}!A:BC`;
 
   try {
     const response = await sheets.spreadsheets.values.get({

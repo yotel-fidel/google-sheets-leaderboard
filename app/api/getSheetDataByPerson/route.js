@@ -1,10 +1,12 @@
 import { NextResponse } from 'next/server';
 import { google } from 'googleapis';
+import { getCurrentWeekAndYear } from '@/app/_utils';
 
 export async function GET(request) {
-const { searchParams } = new URL(request.url);
+  const { searchParams } = new URL(request.url);
   const firstName = searchParams.get('firstName');
   const lastName = searchParams.get('lastName');
+  const { currentYear } = getCurrentWeekAndYear();
 
 
   if (!firstName || !lastName) {
@@ -20,7 +22,7 @@ const { searchParams } = new URL(request.url);
   });
 
   const sheets = google.sheets({ version: "v4", auth: await auth.getClient() });
-  const range = "2024!A:BC";
+  const range = `${currentYear}!A:BC`;
 
   try {
     const response = await sheets.spreadsheets.values.get({
@@ -48,58 +50,58 @@ const extractData = (data) => {
   let salesBookedMDSStart, salesBookedMDSEnd;
   let salesBookedDems = [];
   let salesBookedMDS = [];
-  
-    let i = 0;
-    while (i < data.length) {
-      if (data[i][0] === "END") break;
-  
-      if (data[i][0] === "Booked Dems Start") {
-        salesBookedDemsStart = i + 2;
-      }
-  
-      if (data[i][0] === "Booked Dems End") {
-        salesBookedDemsEnd = i - 1;
-      }
-  
-      if (data[i][0] === "Booked MDS Start") {
-        salesBookedMDSStart = i + 2;
-      }
-  
-      if (data[i][0] === "Booked MDS End") {
-        salesBookedMDSEnd = i - 1;
-      }
-      i++;
+
+  let i = 0;
+  while (i < data.length) {
+    if (data[i][0] === "END") break;
+
+    if (data[i][0] === "Booked Dems Start") {
+      salesBookedDemsStart = i + 2;
     }
-  
-    let start = salesBookedDemsStart;
-    let end = salesBookedDemsEnd;
-    for (; start <= end && start < data.length; start++) {
-      const [name, profileImg, team, ...salesData] = data[start]
-      const total = salesData.reduce((sum, weekSales) => sum + Number(weekSales), 0);
-  
-      salesBookedDems.push({
-        name,
-        profileImg,
-        team,
-        sales: salesData,
-        total,
-      });
+
+    if (data[i][0] === "Booked Dems End") {
+      salesBookedDemsEnd = i - 1;
     }
-  
-    start = salesBookedMDSStart;
-    end = salesBookedMDSEnd;
-    for (; start <= end && start < data.length; start++) {
-      const [name, profileImg, team, ...salesData] = data[start]
-      const total = salesData.reduce((sum, weekSales) => sum + Number(weekSales), 0);
-  
-      salesBookedMDS.push({
-        name,
-        profileImg,
-        team,
-        sales: salesData,
-        total,
-      });
+
+    if (data[i][0] === "Booked MDS Start") {
+      salesBookedMDSStart = i + 2;
     }
-  
-    return { salesBookedDems, salesBookedMDS };
-  };
+
+    if (data[i][0] === "Booked MDS End") {
+      salesBookedMDSEnd = i - 1;
+    }
+    i++;
+  }
+
+  let start = salesBookedDemsStart;
+  let end = salesBookedDemsEnd;
+  for (; start <= end && start < data.length; start++) {
+    const [name, profileImg, team, ...salesData] = data[start]
+    const total = salesData.reduce((sum, weekSales) => sum + Number(weekSales), 0);
+
+    salesBookedDems.push({
+      name,
+      profileImg,
+      team,
+      sales: salesData,
+      total,
+    });
+  }
+
+  start = salesBookedMDSStart;
+  end = salesBookedMDSEnd;
+  for (; start <= end && start < data.length; start++) {
+    const [name, profileImg, team, ...salesData] = data[start]
+    const total = salesData.reduce((sum, weekSales) => sum + Number(weekSales), 0);
+
+    salesBookedMDS.push({
+      name,
+      profileImg,
+      team,
+      sales: salesData,
+      total,
+    });
+  }
+
+  return { salesBookedDems, salesBookedMDS };
+};
