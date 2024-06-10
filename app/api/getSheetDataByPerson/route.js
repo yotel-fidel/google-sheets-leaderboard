@@ -34,10 +34,14 @@ export async function GET(request) {
     const extractedData = extractData(data);
     const foundBookedDemsRow = extractedData.salesBookedDems.find(row => row.name.toLowerCase().includes(`${firstName} ${lastName}`));
     const foundBookedMDSRow = extractedData.salesBookedMDS.find(row => row.name.toLowerCase().includes(`${firstName} ${lastName}`));
+    const foundSatDemsRow = extractedData.salesSatDems.find(row => row.name.toLowerCase().includes(`${firstName} ${lastName}`));
+    const foundSatMDSRow = extractedData.salesSatMDS.find(row => row.name.toLowerCase().includes(`${firstName} ${lastName}`));
 
     return NextResponse.json({
       bookedDemsData: foundBookedDemsRow,
-      bookedMDSData: foundBookedMDSRow
+      bookedMDSData: foundBookedMDSRow,
+      satDemsData: foundSatDemsRow,
+      satMDSData: foundSatMDSRow,
     });
   } catch (error) {
     console.error("Error fetching sheets data: ", error);
@@ -48,8 +52,12 @@ export async function GET(request) {
 const extractData = (data) => {
   let salesBookedDemsStart, salesBookedDemsEnd;
   let salesBookedMDSStart, salesBookedMDSEnd;
+  let salesSatDemsStart, salesSatDemsEnd;
+  let salesSatMDSStart, salesSatMDSEnd;
   let salesBookedDems = [];
   let salesBookedMDS = [];
+  let salesSatDems = [];
+  let salesSatMDS = [];
 
   let i = 0;
   while (i < data.length) {
@@ -69,6 +77,22 @@ const extractData = (data) => {
 
     if (data[i][0] === "Booked MDS End") {
       salesBookedMDSEnd = i - 1;
+    }
+
+    if (data[i][0] === "Sat Dems Start") {
+      salesSatDemsStart = i + 2;
+    }
+
+    if (data[i][0] === "Sat Dems End") {
+      salesSatDemsEnd = i - 1;
+    }
+
+    if (data[i][0] === "Sat MDS Start") {
+      salesSatMDSStart = i + 2;
+    }
+
+    if (data[i][0] === "Sat MDS End") {
+      salesSatMDSEnd = i - 1;
     }
     i++;
   }
@@ -103,5 +127,36 @@ const extractData = (data) => {
     });
   }
 
-  return { salesBookedDems, salesBookedMDS };
+  start = salesSatDemsStart;
+  end = salesSatDemsEnd;
+  for (; start <= end && start < data.length; start++) {
+    const [name, profileImg, team, ...salesData] = data[start]
+    const total = salesData.reduce((sum, weekSales) => sum + Number(weekSales), 0);
+
+    salesSatDems.push({
+      name,
+      profileImg,
+      team,
+      sales: salesData,
+      total,
+    });
+
+  }
+
+  start = salesSatMDSStart;
+  end = salesSatMDSEnd;
+  for (; start <= end && start < data.length; start++) {
+    const [name, profileImg, team, ...salesData] = data[start]
+    const total = salesData.reduce((sum, weekSales) => sum + Number(weekSales), 0);
+
+    salesSatMDS.push({
+      name,
+      profileImg,
+      team,
+      sales: salesData,
+      total,
+    });
+  }
+
+  return { salesBookedDems, salesBookedMDS, salesSatDems, salesSatMDS };
 };
