@@ -38,10 +38,10 @@ const Leaderboard = () => {
 
   return (
     <div className="leaderboard-container mx-auto p-4 bg-gray-100 rounded-lg shadow-lg">
-      <h1 className='text-black'>{getWeekRange(currentWeekNumber, currentYear)}</h1>
+      <h1 className='text-black text-center'>{getWeekRange(currentWeekNumber, currentYear)}</h1>
       <div className='flex flex-wrap justify-between gap-2'>
         <div className='flex-1'>
-          <h1 className="text-2xl text-black font-bold text-center mb-6">(Booked Dems) Total</h1>
+          <h1 className="text-2xl text-black font-bold text-center mb-6">Booked Dems</h1>
           {loading && <Loading />}
           {bookedDemsData && bookedDemsData.sort((a, b) => b.sales[currentWeekNumber - 1] - a.sales[currentWeekNumber - 1]).map((info, index) => (
             <Link
@@ -91,7 +91,7 @@ const Leaderboard = () => {
           ))}
         </div>
         <div className='flex-1'>
-          <h1 className="text-2xl text-black font-bold text-center mb-6">(Booked MDS) Total</h1>
+          <h1 className="text-2xl text-black font-bold text-center mb-6">Booked MDS</h1>
           {loading && <Loading />}
           {bookedMDSData && bookedMDSData.sort((a, b) => b.sales[currentWeekNumber - 1] - a.sales[currentWeekNumber - 1]).map((info, index) => (
             <Link
@@ -141,7 +141,7 @@ const Leaderboard = () => {
           ))}
         </div>
         <div className='flex-1'>
-          <h1 className="text-2xl text-black font-bold text-center mb-6">(Sat Dems) Total</h1>
+          <h1 className="text-2xl text-black font-bold text-center mb-6">Sat Dems</h1>
           {loading && <Loading />}
           {satDemsData && satDemsData.sort((a, b) => b.sales[currentWeekNumber - 1] - a.sales[currentWeekNumber - 1]).map((info, index) => (
             <Link
@@ -191,7 +191,7 @@ const Leaderboard = () => {
           ))}
         </div>
         <div className='flex-1'>
-          <h1 className="text-2xl text-black font-bold text-center mb-6">(Sat MDS) Total</h1>
+          <h1 className="text-2xl text-black font-bold text-center mb-6">Sat MDS</h1>
           {loading && <Loading />}
           {satMDSData && satMDSData.sort((a, b) => b.sales[currentWeekNumber - 1] - a.sales[currentWeekNumber - 1]).map((info, index) => (
             <Link
