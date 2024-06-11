@@ -4,6 +4,9 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { getWeekRange, getCurrentWeekAndYear } from '../_utils/index'
 import Loading from './Loading';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import RankingCard from './RankingCard';
+
 
 const Leaderboard = () => {
   const [bookedDemsData, setBookedDemsData] = useState([]);
@@ -37,212 +40,60 @@ const Leaderboard = () => {
   }, []);
 
   return (
-    <div className="leaderboard-container mx-auto p-4 bg-gray-100 rounded-lg shadow-lg">
-      <h1 className='text-black text-center'>{getWeekRange(currentWeekNumber, currentYear)}</h1>
-      <div className='flex flex-wrap justify-between gap-2'>
-        <div className='flex-1'>
+    <div className="leaderboard-container mx-auto p-4 min-h-screen bg-gray-100 rounded-lg shadow-lg">
+      <h1 className='text-black text-center mb-2'>{getWeekRange(currentWeekNumber, currentYear)}</h1>
+      <Tabs defaultValue="bookedDems" className="w-full">
+        <TabsList>
+          <TabsTrigger value="bookedDems">Booked Dems</TabsTrigger>
+          <TabsTrigger value="bookedMDS">Booked MDS</TabsTrigger>
+          <TabsTrigger value="satDems">Sat Dems</TabsTrigger>
+          <TabsTrigger value="satMDS">Sat MDS</TabsTrigger>
+        </TabsList>
+        <TabsContent value="bookedDems" className="w-full">
           <h1 className="text-2xl text-black font-bold text-center mb-6">Booked Dems</h1>
-          {loading && <Loading />}
-          {bookedDemsData && bookedDemsData.sort((a, b) => b.sales[currentWeekNumber - 1] - a.sales[currentWeekNumber - 1]).map((info, index) => (
-            <Link
-              key={index}
-              href={`/sales-person/${info.name.toLowerCase().replace(/\s/g, "_")}`}
-              passHref
-            >
-              <div
-                className="item-container flex justify-between items-center p-4 bg-white mb-4 rounded-lg shadow-md hover:bg-gray-50 cursor-pointer"
-              >
-                <div className="left-side-container flex items-center">
-                  <div className="ranking-container text-lg font-bold text-gray-700 mr-4">
-                    Rank {index + 1}
-                  </div>
-                  <div className="person-image-container flex items-center">
-                    <div className="image-container w-12 h-12 rounded-full overflow-hidden mr-4">
-                      {info.profileImg && <img
-                        src={`https://drive.google.com/thumbnail?id=${info.profileImg}&sz=w50`}
-                        alt={info.name}
-                        className="w-full h-full object-cover"
-                        referrerPolicy="no-referrer"
-                      />}
-                      {!info.profileImg && <img
-                        src={'/assets/images/default-person.webp'}
-                        alt={info.name}
-                        className="w-full h-full object-cover"
-                        referrerPolicy="no-referrer"
-                      />}
-                    </div>
-                    <div>
-                      <p className="sales-person-name text-gray-700">{info.name}</p>
-                      <Link
-                        key={index}
-                        href={`/team/${info.team.toLowerCase().replace(/\s/g, "_")}`}
-                        passHref
-                      >
-                        <p className="sales-person-name text-[12px] text-gray-700 hover:underline">{info.team}</p>
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-                <div className="booking-number text-xl font-semibold text-blue-600">
-                  {info.sales[currentWeekNumber - 1]}
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
-        <div className='flex-1'>
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full'>
+            {loading && (<div className="flex justify-center w-full">
+              <Loading />
+            </div>)}
+            {bookedDemsData && bookedDemsData.sort((a, b) => b.sales[currentWeekNumber - 1] - a.sales[currentWeekNumber - 1]).map((info, index) => (
+              <RankingCard key={index} info={info} index={index} currentWeekNumber={currentWeekNumber} />
+            ))}
+          </div>
+        </TabsContent>
+        <TabsContent value="bookedMDS">
           <h1 className="text-2xl text-black font-bold text-center mb-6">Booked MDS</h1>
-          {loading && <Loading />}
-          {bookedMDSData && bookedMDSData.sort((a, b) => b.sales[currentWeekNumber - 1] - a.sales[currentWeekNumber - 1]).map((info, index) => (
-            <Link
-              key={index}
-              href={`/sales-person/${info.name.toLowerCase().replace(/\s/g, "_")}`}
-              passHref
-            >
-              <div
-                className="item-container flex justify-between items-center p-4 bg-white mb-4 rounded-lg shadow-md hover:bg-gray-50 cursor-pointer"
-              >
-                <div className="left-side-container flex items-center">
-                  <div className="ranking-container text-lg font-bold text-gray-700 mr-4">
-                    Rank {index + 1}
-                  </div>
-                  <div className="person-image-container flex items-center">
-                    <div className="image-container w-12 h-12 rounded-full overflow-hidden mr-4">
-                      {info.profileImg && <img
-                        src={`https://drive.google.com/thumbnail?id=${info.profileImg}&sz=w50`}
-                        alt={info.name}
-                        className="w-full h-full object-cover"
-                        referrerPolicy="no-referrer"
-                      />}
-                      {!info.profileImg && <img
-                        src={'/assets/images/default-person.webp'}
-                        alt={info.name}
-                        className="w-full h-full object-cover"
-                        referrerPolicy="no-referrer"
-                      />}
-                    </div>
-                    <div>
-                      <p className="sales-person-name text-gray-700">{info.name}</p>
-                      <Link
-                        key={index}
-                        href={`/team/${info.team.toLowerCase().replace(/\s/g, "_")}`}
-                        passHref
-                      >
-                        <p className="sales-person-name text-[12px] text-gray-700 hover:underline">{info.team}</p>
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-                <div className="booking-number text-xl font-semibold text-blue-600">
-                  {info.sales[currentWeekNumber - 1]}
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
-        <div className='flex-1'>
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full'>
+            {loading && (<div className="flex justify-center w-full">
+              <Loading />
+            </div>)}
+            {bookedMDSData && bookedMDSData.sort((a, b) => b.sales[currentWeekNumber - 1] - a.sales[currentWeekNumber - 1]).map((info, index) => (
+              <RankingCard key={index} info={info} index={index} currentWeekNumber={currentWeekNumber} />
+            ))}
+          </div>
+        </TabsContent>
+        <TabsContent value="satDems">
           <h1 className="text-2xl text-black font-bold text-center mb-6">Sat Dems</h1>
-          {loading && <Loading />}
-          {satDemsData && satDemsData.sort((a, b) => b.sales[currentWeekNumber - 1] - a.sales[currentWeekNumber - 1]).map((info, index) => (
-            <Link
-              key={index}
-              href={`/sales-person/${info.name.toLowerCase().replace(/\s/g, "_")}`}
-              passHref
-            >
-              <div
-                className="item-container flex justify-between items-center p-4 bg-white mb-4 rounded-lg shadow-md hover:bg-gray-50 cursor-pointer"
-              >
-                <div className="left-side-container flex items-center">
-                  <div className="ranking-container text-lg font-bold text-gray-700 mr-4">
-                    Rank {index + 1}
-                  </div>
-                  <div className="person-image-container flex items-center">
-                    <div className="image-container w-12 h-12 rounded-full overflow-hidden mr-4">
-                      {info.profileImg && <img
-                        src={`https://drive.google.com/thumbnail?id=${info.profileImg}&sz=w50`}
-                        alt={info.name}
-                        className="w-full h-full object-cover"
-                        referrerPolicy="no-referrer"
-                      />}
-                      {!info.profileImg && <img
-                        src={'/assets/images/default-person.webp'}
-                        alt={info.name}
-                        className="w-full h-full object-cover"
-                        referrerPolicy="no-referrer"
-                      />}
-                    </div>
-                    <div>
-                      <p className="sales-person-name text-gray-700">{info.name}</p>
-                      <Link
-                        key={index}
-                        href={`/team/${info.team.toLowerCase().replace(/\s/g, "_")}`}
-                        passHref
-                      >
-                        <p className="sales-person-name text-[12px] text-gray-700 hover:underline">{info.team}</p>
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-                <div className="booking-number text-xl font-semibold text-blue-600">
-                  {info.sales[currentWeekNumber - 1]}
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
-        <div className='flex-1'>
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full'>
+            {loading && (<div className="flex justify-center w-full">
+              <Loading />
+            </div>)}
+            {satDemsData && satDemsData.sort((a, b) => b.sales[currentWeekNumber - 1] - a.sales[currentWeekNumber - 1]).map((info, index) => (
+              <RankingCard key={index} info={info} index={index} currentWeekNumber={currentWeekNumber} />
+            ))}
+          </div>
+        </TabsContent>
+        <TabsContent value="satMDS">
           <h1 className="text-2xl text-black font-bold text-center mb-6">Sat MDS</h1>
-          {loading && <Loading />}
-          {satMDSData && satMDSData.sort((a, b) => b.sales[currentWeekNumber - 1] - a.sales[currentWeekNumber - 1]).map((info, index) => (
-            <Link
-              key={index}
-              href={`/sales-person/${info.name.toLowerCase().replace(/\s/g, "_")}`}
-              passHref
-            >
-              <div
-                className="item-container flex justify-between items-center p-4 bg-white mb-4 rounded-lg shadow-md hover:bg-gray-50 cursor-pointer"
-              >
-                <div className="left-side-container flex items-center">
-                  <div className="ranking-container text-lg font-bold text-gray-700 mr-4">
-                    Rank {index + 1}
-                  </div>
-                  <div className="person-image-container flex items-center">
-                    <div className="image-container w-12 h-12 rounded-full overflow-hidden mr-4">
-                      {info.profileImg && <img
-                        src={`https://drive.google.com/thumbnail?id=${info.profileImg}&sz=w50`}
-                        alt={info.name}
-                        className="w-full h-full object-cover"
-                        referrerPolicy="no-referrer"
-                      />}
-                      {!info.profileImg && <img
-                        src={'/assets/images/default-person.webp'}
-                        alt={info.name}
-                        className="w-full h-full object-cover"
-                        referrerPolicy="no-referrer"
-                      />}
-                    </div>
-                    <div>
-                      <p className="sales-person-name text-gray-700">{info.name}</p>
-                      <Link
-                        key={index}
-                        href={`/team/${info.team.toLowerCase().replace(/\s/g, "_")}`}
-                        passHref
-                      >
-                        <p className="sales-person-name text-[12px] text-gray-700 hover:underline">{info.team}</p>
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-                <div className="booking-number text-xl font-semibold text-blue-600">
-                  {info.sales[currentWeekNumber - 1]}
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </div>
-
-
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full'>
+            {loading && (<div className="flex justify-center w-full">
+              <Loading />
+            </div>)}
+            {satMDSData && satMDSData.sort((a, b) => b.sales[currentWeekNumber - 1] - a.sales[currentWeekNumber - 1]).map((info, index) => (
+              <RankingCard key={index} info={info} index={index} currentWeekNumber={currentWeekNumber} />
+            ))}
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
