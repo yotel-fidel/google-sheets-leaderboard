@@ -13,6 +13,7 @@ const Leaderboard = () => {
   const [bookedMDSData, setBookedMDSData] = useState([]);
   const [satDemsData, setSatDemsData] = useState([]);
   const [satMDSData, setSatMDSData] = useState([]);
+  const [salesSDRData, setSalesSDRData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const { currentWeekNumber, currentYear } = getCurrentWeekAndYear();
@@ -26,6 +27,7 @@ const Leaderboard = () => {
         setBookedMDSData(data.bookedMDSData);
         setSatDemsData(data.satDemsData);
         setSatMDSData(data.satMDSData);
+        setSalesSDRData(data.salesSDRData);
         setLoading(false);
 
         // console.log("Week number: ", currentWeekNumber)
@@ -48,6 +50,7 @@ const Leaderboard = () => {
           <TabsTrigger value="bookedMDS">Booked MDS</TabsTrigger>
           <TabsTrigger value="satDems">Sat Dems</TabsTrigger>
           <TabsTrigger value="satMDS">Sat MDS</TabsTrigger>
+          <TabsTrigger value="salesSDR">Sales</TabsTrigger>
         </TabsList>
         <TabsContent value="bookedDems" className="w-full">
           <h1 className="text-2xl text-black font-bold text-center mb-6">Booked Dems</h1>
@@ -90,6 +93,17 @@ const Leaderboard = () => {
             </div>)}
             {satMDSData && satMDSData.sort((a, b) => b.sales[currentWeekNumber - 1] - a.sales[currentWeekNumber - 1]).map((info, index) => (
               <RankingCard key={index} info={info} index={index} currentWeekNumber={currentWeekNumber} />
+            ))}
+          </div>
+        </TabsContent>
+        <TabsContent value="salesSDR">
+          <h1 className="text-2xl text-black font-bold text-center mb-6">Sales</h1>
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full'>
+            {loading && (<div className="flex justify-center w-full">
+              <Loading />
+            </div>)}
+            {salesSDRData && salesSDRData.sort((a, b) => b.sales[currentWeekNumber - 1] - a.sales[currentWeekNumber - 1]).map((info, index) => (
+              <RankingCard key={index} info={info} index={index} currentWeekNumber={currentWeekNumber} isCurrency={true} />
             ))}
           </div>
         </TabsContent>
