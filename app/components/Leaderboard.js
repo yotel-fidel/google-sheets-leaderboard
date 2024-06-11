@@ -54,10 +54,10 @@ const Leaderboard = () => {
         </TabsList>
         <TabsContent value="bookedDems" className="w-full">
           <h1 className="text-2xl text-black font-bold text-center mb-6">Booked Dems</h1>
+          {loading && (<div className="flex justify-center w-full">
+            <Loading />
+          </div>)}
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full'>
-            {loading && (<div className="flex justify-center w-full">
-              <Loading />
-            </div>)}
             {bookedDemsData && bookedDemsData.sort((a, b) => b.sales[currentWeekNumber - 1] - a.sales[currentWeekNumber - 1]).map((info, index) => (
               <RankingCard key={index} info={info} index={index} currentWeekNumber={currentWeekNumber} />
             ))}
@@ -65,10 +65,10 @@ const Leaderboard = () => {
         </TabsContent>
         <TabsContent value="bookedMDS">
           <h1 className="text-2xl text-black font-bold text-center mb-6">Booked MDS</h1>
+          {loading && (<div className="flex justify-center w-full">
+            <Loading />
+          </div>)}
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full'>
-            {loading && (<div className="flex justify-center w-full">
-              <Loading />
-            </div>)}
             {bookedMDSData && bookedMDSData.sort((a, b) => b.sales[currentWeekNumber - 1] - a.sales[currentWeekNumber - 1]).map((info, index) => (
               <RankingCard key={index} info={info} index={index} currentWeekNumber={currentWeekNumber} />
             ))}
@@ -76,10 +76,10 @@ const Leaderboard = () => {
         </TabsContent>
         <TabsContent value="satDems">
           <h1 className="text-2xl text-black font-bold text-center mb-6">Sat Dems</h1>
+          {loading && (<div className="flex justify-center w-full">
+            <Loading />
+          </div>)}
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full'>
-            {loading && (<div className="flex justify-center w-full">
-              <Loading />
-            </div>)}
             {satDemsData && satDemsData.sort((a, b) => b.sales[currentWeekNumber - 1] - a.sales[currentWeekNumber - 1]).map((info, index) => (
               <RankingCard key={index} info={info} index={index} currentWeekNumber={currentWeekNumber} />
             ))}
@@ -87,10 +87,10 @@ const Leaderboard = () => {
         </TabsContent>
         <TabsContent value="satMDS">
           <h1 className="text-2xl text-black font-bold text-center mb-6">Sat MDS</h1>
+          {loading && (<div className="flex justify-center w-full">
+            <Loading />
+          </div>)}
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full'>
-            {loading && (<div className="flex justify-center w-full">
-              <Loading />
-            </div>)}
             {satMDSData && satMDSData.sort((a, b) => b.sales[currentWeekNumber - 1] - a.sales[currentWeekNumber - 1]).map((info, index) => (
               <RankingCard key={index} info={info} index={index} currentWeekNumber={currentWeekNumber} />
             ))}
@@ -98,10 +98,10 @@ const Leaderboard = () => {
         </TabsContent>
         <TabsContent value="salesSDR">
           <h1 className="text-2xl text-black font-bold text-center mb-6">Sales</h1>
+          {loading && (<div className="flex justify-center w-full">
+            <Loading />
+          </div>)}
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full'>
-            {loading && (<div className="flex justify-center w-full">
-              <Loading />
-            </div>)}
             {salesSDRData && salesSDRData.sort((a, b) => b.sales[currentWeekNumber - 1] - a.sales[currentWeekNumber - 1]).map((info, index) => (
               <RankingCard key={index} info={info} index={index} currentWeekNumber={currentWeekNumber} isCurrency={true} />
             ))}
