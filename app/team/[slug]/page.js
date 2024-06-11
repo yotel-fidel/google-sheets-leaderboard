@@ -15,6 +15,7 @@ import {
 import { Line } from 'react-chartjs-2';
 import { getWeekRange, getCurrentWeekAndYear } from '@/app/_utils'
 import Loading from '@/app/components/Loading';
+import Button from '@/app/components/Button';
 
 ChartJS.register(
   CategoryScale,
@@ -68,9 +69,9 @@ const SalesTeamPage = ({ params }) => {
     fetchsalesTeamData();
   }, [params.slug]);
 
-  // Render the component based on the found data
   return (
-    <div className="mx-auto p-4 bg-gray-100 rounded-lg shadow-lg">
+    <div className="min-h-screen mx-auto p-4 bg-gray-100 rounded-lg shadow-lg">
+      <Button href="/" className="!bg-black hover:!bg-gray-700 text-md px-4 py-2 mb-2">Home</Button>
       {bookedDemsData && (<div>
         <h1 className="text-2xl text-black font-bold text-center">{bookedDemsData[0] && bookedDemsData[0].team}</h1>
         <p className='text-black text-center mb-6'>{getWeekRange(currentWeekNumber, currentYear)}</p>
