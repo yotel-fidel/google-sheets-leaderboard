@@ -13,6 +13,8 @@ import {
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import Loading from '@/app/components/Loading';
+import Button from '@/app/components/Button';
+import Link from 'next/link';
 
 ChartJS.register(
   CategoryScale,
@@ -151,7 +153,8 @@ const SalesPersonPage = ({ params }) => {
 
   // Render the component based on the found data
   return (
-    <div className=" mx-auto p-4 bg-gray-100 rounded-lg shadow-lg">
+    <div className="min-h-screen mx-auto p-4 bg-gray-100 rounded-lg shadow-lg">
+      <Button href="/" className="!bg-black hover:!bg-gray-700 text-md px-4 py-2 mb-2">Home</Button>
       <div className='flex gap-[10px] items-end mb-3'>
         {bookedDemsData && bookedDemsData.profileImg && <img
           src={`https://drive.google.com/thumbnail?id=${bookedDemsData.profileImg}&sz=w150`}
@@ -159,13 +162,19 @@ const SalesPersonPage = ({ params }) => {
           className="w-[150px] h-[150px] rounded-lg shadow-md object-cover"
           referrerPolicy="no-referrer"
         />}
-        <h1 className="text-2xl text-black font-bold text-center">{bookedDemsData && bookedDemsData.name}</h1>
+        {bookedDemsData && (<div className=''><h1 className="text-2xl text-black font-bold text-center">{bookedDemsData.name}</h1>
+          <h2 className="text-lg font-semibold text-gray-700">
+            Team: <Link
+              href={`/team/${bookedDemsData.team.toLowerCase().replace(/\s/g, "_")}`}
+              passHref
+              className='hover:underline'
+            >{bookedDemsData.team}</Link>
+          </h2></div>)}
       </div>
 
       {loading && <Loading />}
       {bookedDemsData && (
         <div className="bg-white p-4 rounded-lg shadow-md">
-          <h2 className="text-xl font-semibold text-gray-700">Team: {bookedDemsData.team}</h2>
           {/* <table className="min-w-full mt-4 text-black">
             <thead>
               <tr className="bg-gray-100">
