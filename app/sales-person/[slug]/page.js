@@ -114,7 +114,8 @@ export const optionsSalesSDR = {
         callback: function (value, index, ticks) {
           return '£' + value;
         }
-      }
+      },
+      // suggestedMin: 0,
     }
   },
   plugins: {
