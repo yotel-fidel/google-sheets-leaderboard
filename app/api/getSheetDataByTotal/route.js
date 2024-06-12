@@ -113,7 +113,7 @@ const extractData = (data) => {
       profileImg,
       team,
       sales: salesData,
-      total,
+      total: parseFloat(total.toFixed(2)),
     });
   }
 
@@ -128,7 +128,7 @@ const extractData = (data) => {
       profileImg,
       team,
       sales: salesData,
-      total,
+      total: parseFloat(total.toFixed(2)),
     });
   }
 
@@ -143,7 +143,7 @@ const extractData = (data) => {
       profileImg,
       team,
       sales: salesData,
-      total,
+      total: parseFloat(total.toFixed(2)),
     });
   }
 
@@ -158,7 +158,7 @@ const extractData = (data) => {
       profileImg,
       team,
       sales: salesData,
-      total,
+      total: parseFloat(total.toFixed(2)),
     });
   }
 
@@ -176,7 +176,7 @@ const extractData = (data) => {
       profileImg,
       team,
       sales: salesData,
-      total,
+      total: parseFloat(total.toFixed(2)),
     });
   }
 
