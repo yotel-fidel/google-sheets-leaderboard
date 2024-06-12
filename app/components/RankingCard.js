@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation'
 
-export default function RankingCard({ info, index, currentWeekNumber, isCurrency }) {
+export default function RankingCard({ info, index, currentWeekNumber, isShowTeam, isCurrency }) {
     const router = useRouter()
 
     const handlePersonTeamClick = (e, personLink) => {
@@ -52,12 +52,12 @@ export default function RankingCard({ info, index, currentWeekNumber, isCurrency
                                     />
                                 )}
                             </div>
-                            <div>
+                            <div className='flex flex-col justify-center'>
                                 <p className="sales-person-name text-gray-700">{info.name}</p>
-                                <p
+                                {isShowTeam && (<p
                                     className="sales-person-name text-[12px] text-gray-700 hover:underline"
                                     onClick={(e) => handlePersonTeamClick(e, info.team)}
-                                >{info.team}</p>
+                                >{info.team}</p>)}
                             </div>
                         </div>
                     </div>
