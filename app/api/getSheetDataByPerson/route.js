@@ -36,12 +36,14 @@ export async function GET(request) {
     const foundBookedMDSRow = extractedData.salesBookedMDS.find(row => row.name.toLowerCase().includes(`${firstName} ${lastName}`));
     const foundSatDemsRow = extractedData.salesSatDems.find(row => row.name.toLowerCase().includes(`${firstName} ${lastName}`));
     const foundSatMDSRow = extractedData.salesSatMDS.find(row => row.name.toLowerCase().includes(`${firstName} ${lastName}`));
+    const foundSalesSDR = extractedData.salesSDR.find(row => row.name.toLowerCase().includes(`${firstName} ${lastName}`));
 
     return NextResponse.json({
       bookedDemsData: foundBookedDemsRow,
       bookedMDSData: foundBookedMDSRow,
       satDemsData: foundSatDemsRow,
       satMDSData: foundSatMDSRow,
+      salesSDRData: foundSalesSDR
     });
   } catch (error) {
     console.error("Error fetching sheets data: ", error);
@@ -54,10 +56,12 @@ const extractData = (data) => {
   let salesBookedMDSStart, salesBookedMDSEnd;
   let salesSatDemsStart, salesSatDemsEnd;
   let salesSatMDSStart, salesSatMDSEnd;
+  let salesSDRStart, salesSDREnd;
   let salesBookedDems = [];
   let salesBookedMDS = [];
   let salesSatDems = [];
   let salesSatMDS = [];
+  let salesSDR = [];
 
   let i = 0;
   while (i < data.length) {
@@ -94,6 +98,14 @@ const extractData = (data) => {
     if (data[i][0] === "Sat MDS End") {
       salesSatMDSEnd = i - 1;
     }
+
+    if (data[i][0] === "Sales Start") {
+      salesSDRStart = i + 2;
+    }
+
+    if (data[i][0] === "Sales End") {
+      salesSDREnd = i - 1;
+    }
     i++;
   }
 
@@ -108,7 +120,7 @@ const extractData = (data) => {
       profileImg,
       team,
       sales: salesData,
-      total,
+      total: parseFloat(total.toFixed(2)),
     });
   }
 
@@ -123,7 +135,7 @@ const extractData = (data) => {
       profileImg,
       team,
       sales: salesData,
-      total,
+      total: parseFloat(total.toFixed(2)),
     });
   }
 
@@ -138,7 +150,7 @@ const extractData = (data) => {
       profileImg,
       team,
       sales: salesData,
-      total,
+      total: parseFloat(total.toFixed(2)),
     });
 
   }
@@ -154,9 +166,27 @@ const extractData = (data) => {
       profileImg,
       team,
       sales: salesData,
-      total,
+      total: parseFloat(total.toFixed(2)),
     });
   }
 
-  return { salesBookedDems, salesBookedMDS, salesSatDems, salesSatMDS };
+  start = salesSDRStart;
+  end = salesSDREnd;
+  for (; start <= end && start < data.length; start++) {
+    const [name, profileImg, team, ...salesData] = data[start]
+    const total = salesData.reduce((sum, weekSales) => {
+      const numericValue = parseFloat(weekSales.substring(1).replace(/,/g, '')); // Remove the first character and convert to number
+      return sum + numericValue;
+    }, 0);
+
+    salesSDR.push({
+      name,
+      profileImg,
+      team,
+      sales: salesData,
+      total: parseFloat(total.toFixed(2)),
+    });
+  }
+
+  return { salesBookedDems, salesBookedMDS, salesSatDems, salesSatMDS, salesSDR };
 };
