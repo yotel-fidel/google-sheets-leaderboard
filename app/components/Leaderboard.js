@@ -59,7 +59,7 @@ const Leaderboard = () => {
           </div>)}
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full'>
             {bookedDemsData && bookedDemsData.sort((a, b) => b.sales[currentWeekNumber - 1] - a.sales[currentWeekNumber - 1]).map((info, index) => (
-              <RankingCard key={index} info={info} index={index} currentWeekNumber={currentWeekNumber} />
+              <RankingCard key={index} info={info} index={index} currentWeekNumber={currentWeekNumber} isShowTeam={true} />
             ))}
           </div>
         </TabsContent>
@@ -70,7 +70,7 @@ const Leaderboard = () => {
           </div>)}
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full'>
             {bookedMDSData && bookedMDSData.sort((a, b) => b.sales[currentWeekNumber - 1] - a.sales[currentWeekNumber - 1]).map((info, index) => (
-              <RankingCard key={index} info={info} index={index} currentWeekNumber={currentWeekNumber} />
+              <RankingCard key={index} info={info} index={index} currentWeekNumber={currentWeekNumber} isShowTeam={true} />
             ))}
           </div>
         </TabsContent>
@@ -81,7 +81,7 @@ const Leaderboard = () => {
           </div>)}
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full'>
             {satDemsData && satDemsData.sort((a, b) => b.sales[currentWeekNumber - 1] - a.sales[currentWeekNumber - 1]).map((info, index) => (
-              <RankingCard key={index} info={info} index={index} currentWeekNumber={currentWeekNumber} />
+              <RankingCard key={index} info={info} index={index} currentWeekNumber={currentWeekNumber} isShowTeam={true} />
             ))}
           </div>
         </TabsContent>
@@ -92,7 +92,7 @@ const Leaderboard = () => {
           </div>)}
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full'>
             {satMDSData && satMDSData.sort((a, b) => b.sales[currentWeekNumber - 1] - a.sales[currentWeekNumber - 1]).map((info, index) => (
-              <RankingCard key={index} info={info} index={index} currentWeekNumber={currentWeekNumber} />
+              <RankingCard key={index} info={info} index={index} currentWeekNumber={currentWeekNumber} isShowTeam={true} />
             ))}
           </div>
         </TabsContent>
@@ -103,7 +103,7 @@ const Leaderboard = () => {
           </div>)}
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full'>
             {salesSDRData && salesSDRData.sort((a, b) => b.sales[currentWeekNumber - 1] - a.sales[currentWeekNumber - 1]).map((info, index) => (
-              <RankingCard key={index} info={info} index={index} currentWeekNumber={currentWeekNumber} isCurrency={true} />
+              <RankingCard key={index} info={info} index={index} currentWeekNumber={currentWeekNumber} isShowTeam={true} isCurrency={true} />
             ))}
           </div>
         </TabsContent>
