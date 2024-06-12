@@ -10,6 +10,8 @@ import {
   Title,
   Tooltip,
   Legend,
+  elements,
+  Filler,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import Loading from '@/app/components/Loading';
@@ -23,11 +25,36 @@ ChartJS.register(
   LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  Filler
 );
+
+
+const elementConfig = {
+  line: {
+    tension: 0.5,
+    borderWidth: 2,
+    fill: true,
+    borderColor: "#e62f36",
+    backgroundColor: "#ee733e",
+  },
+  point: {
+    backgroundColor: "#9e0000"
+  }
+}
 
 export const optionsBookedDems = {
   responsive: true,
+  // animations: {
+  //   tension: {
+  //     duration: 1000,
+  //     easing: 'linear',
+  //     from: 1,
+  //     to: 0,
+  //     loop: true
+  //   }
+  // },
+
   plugins: {
     legend: {
       position: 'top',
@@ -37,6 +64,8 @@ export const optionsBookedDems = {
       text: 'Booked Dems Chart',
     },
   },
+  elements: elementConfig,
+
 };
 export const optionsBookedMDS = {
   responsive: true,
@@ -49,6 +78,7 @@ export const optionsBookedMDS = {
       text: 'Booked MDS Chart',
     },
   },
+  elements: elementConfig,
 };
 export const optionsSatDems = {
   responsive: true,
@@ -61,6 +91,7 @@ export const optionsSatDems = {
       text: 'Sat Dems Chart',
     },
   },
+  elements: elementConfig,
 };
 export const optionsSatMDS = {
   responsive: true,
@@ -73,6 +104,44 @@ export const optionsSatMDS = {
       text: 'Sat MDS Chart',
     },
   },
+  elements: elementConfig,
+};
+export const optionsSalesSDR = {
+  responsive: true,
+  scales: {
+    y: {
+      ticks: {
+        callback: function (value, index, ticks) {
+          return '£' + value;
+        }
+      }
+    }
+  },
+  plugins: {
+    legend: {
+      position: 'top',
+    },
+    title: {
+      display: true,
+      text: 'Sales Chart',
+    },
+    tooltip: {
+      callbacks: {
+        label: function (context) {
+          let label = context.dataset.label || '';
+
+          if (label) {
+            label += ': ';
+          }
+          if (context.parsed.y !== null) {
+            label += new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(context.parsed.y);
+          }
+          return label;
+        }
+      }
+    }
+  },
+  elements: elementConfig,
 };
 
 const SalesPersonPage = ({ params }) => {
@@ -80,10 +149,12 @@ const SalesPersonPage = ({ params }) => {
   const [bookedMDSData, setBookedMDSData] = useState(null);
   const [satDemsData, setSatDemsData] = useState(null);
   const [satMDSData, setSatMDSData] = useState(null);
+  const [salesSDRData, setSalesSDRData] = useState(null);
   const [bookedDemsDataGraph, setBookedDemsDataGraph] = useState(null);
   const [bookedMDSDataGraph, setBookedMDSDataGraph] = useState(null);
   const [satDemsDataGraph, setSatDemsDataGraph] = useState(null);
   const [satMDSDataGraph, setSatMDSDataGraph] = useState(null);
+  const [salesSDRDataGraph, setSalesSDRDataGraph] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -98,14 +169,13 @@ const SalesPersonPage = ({ params }) => {
         setBookedMDSData(data.bookedMDSData);
         setSatDemsData(data.satDemsData);
         setSatMDSData(data.satMDSData);
+        setSalesSDRData(data.salesSDRData);
         setBookedDemsDataGraph({
           labels: data.bookedDemsData.sales.map((week, index) => `Week ${index + 1}`),
           datasets: [
             {
               label: 'Booked Dems',
               data: data.bookedDemsData.sales,
-              borderColor: 'rgb(255, 99, 132)',
-              backgroundColor: 'rgba(255, 99, 132, 0.5)',
             },
           ],
         })
@@ -115,8 +185,6 @@ const SalesPersonPage = ({ params }) => {
             {
               label: 'Booked MDS',
               data: data.bookedMDSData.sales,
-              borderColor: 'rgb(255, 99, 132)',
-              backgroundColor: 'rgba(255, 99, 132, 0.5)',
             },
           ],
         })
@@ -126,8 +194,6 @@ const SalesPersonPage = ({ params }) => {
             {
               label: 'Sat Dems',
               data: data.satDemsData.sales,
-              borderColor: 'rgb(255, 99, 132)',
-              backgroundColor: 'rgba(255, 99, 132, 0.5)',
             },
           ],
         })
@@ -135,10 +201,17 @@ const SalesPersonPage = ({ params }) => {
           labels: data.satMDSData.sales.map((week, index) => `Week ${index + 1}`),
           datasets: [
             {
-              label: 'Sat Dems',
+              label: 'Sat MDS',
               data: data.satMDSData.sales,
-              borderColor: 'rgb(255, 99, 132)',
-              backgroundColor: 'rgba(255, 99, 132, 0.5)',
+            },
+          ],
+        })
+        setSalesSDRDataGraph({
+          labels: data.salesSDRData.sales.map((week, index) => `Week ${index + 1}`),
+          datasets: [
+            {
+              label: 'Sales',
+              data: data.salesSDRData.sales.map(sale => sale.substring(1).replace(/,/g, '')),
             },
           ],
         })
@@ -205,10 +278,9 @@ const SalesPersonPage = ({ params }) => {
               )}
             </div>
 
-
             <div className='flex-1'>
               <div className="mt-4 text-xl font-semibold text-blue-600">
-                Total Booked Dems: {bookedMDSData.total}
+                Total Booked MDS: {bookedMDSData.total}
               </div>
               {bookedMDSDataGraph && (
                 <div className=''>
@@ -221,7 +293,7 @@ const SalesPersonPage = ({ params }) => {
               <div className="mt-4 text-xl font-semibold text-blue-600">
                 Total Sat Dems: {satDemsData.total}
               </div>
-              {bookedMDSDataGraph && (
+              {satDemsDataGraph && (
                 <div className=''>
                   <Line options={optionsSatDems} data={satDemsDataGraph} />
                 </div>
@@ -231,9 +303,19 @@ const SalesPersonPage = ({ params }) => {
               <div className="mt-4 text-xl font-semibold text-blue-600">
                 Total Sat MDS: {satMDSData.total}
               </div>
-              {bookedMDSDataGraph && (
+              {satMDSDataGraph && (
                 <div className=''>
                   <Line options={optionsSatMDS} data={satMDSDataGraph} />
+                </div>
+              )}
+            </div>
+            <div className='flex-1'>
+              <div className="mt-4 text-xl font-semibold text-blue-600">
+                Total Sales: £{salesSDRData.total}
+              </div>
+              {salesSDRDataGraph && (
+                <div className=''>
+                  <Line options={optionsSalesSDR} data={salesSDRDataGraph} />
                 </div>
               )}
             </div>
