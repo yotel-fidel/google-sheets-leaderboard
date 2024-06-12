@@ -32,12 +32,14 @@ export async function GET(request) {
     const sortedBookedMDSData = filteredData.salesBookedMDS.sort((a, b) => b.total - a.total);
     const sortedSatDemsData = filteredData.salesSatDems.sort((a, b) => b.total - a.total);
     const sortedSatMDSData = filteredData.salesSatMDS.sort((a, b) => b.total - a.total);
+    const sortedSalesSDRData = filteredData.salesSDR.sort((a, b) => b.total - a.total);
 
     return NextResponse.json({
       bookedDemsData: sortedBookedDemsData,
       bookedMDSData: sortedBookedMDSData,
       satDemsData: sortedSatDemsData,
       satMDSData: sortedSatMDSData,
+      salesSDRData: sortedSalesSDRData
     });
   } catch (error) {
     console.error("Error fetching sheets data: ", error);
@@ -50,10 +52,12 @@ const extractAndFilterData = (data, teamParam) => {
   let salesBookedMDSStart, salesBookedMDSEnd;
   let salesSatDemsStart, salesSatDemsEnd;
   let salesSatMDSStart, salesSatMDSEnd;
+  let salesSDRStart, salesSDREnd;
   let salesBookedDems = [];
   let salesBookedMDS = [];
   let salesSatDems = [];
   let salesSatMDS = [];
+  let salesSDR = [];
 
   let i = 0;
   while (i < data.length) {
@@ -90,6 +94,14 @@ const extractAndFilterData = (data, teamParam) => {
     if (data[i][0] === "Sat MDS End") {
       salesSatMDSEnd = i - 1;
     }
+
+    if (data[i][0] === "Sales Start") {
+      salesSDRStart = i + 2;
+    }
+
+    if (data[i][0] === "Sales End") {
+      salesSDREnd = i - 1;
+    }
     i++;
   }
 
@@ -104,7 +116,7 @@ const extractAndFilterData = (data, teamParam) => {
         profileImg,
         team,
         sales: salesData,
-        total
+        total: parseFloat(total.toFixed(2)),
       });
     }
   }
@@ -120,7 +132,7 @@ const extractAndFilterData = (data, teamParam) => {
         profileImg,
         team,
         sales: salesData,
-        total
+        total: parseFloat(total.toFixed(2)),
       });
     }
   }
@@ -136,7 +148,7 @@ const extractAndFilterData = (data, teamParam) => {
         profileImg,
         team,
         sales: salesData,
-        total
+        total: parseFloat(total.toFixed(2)),
       });
     }
   }
@@ -152,10 +164,29 @@ const extractAndFilterData = (data, teamParam) => {
         profileImg,
         team,
         sales: salesData,
-        total
+        total: parseFloat(total.toFixed(2)),
       });
     }
   }
 
-  return { salesBookedDems, salesBookedMDS, salesSatDems, salesSatMDS };
+  start = salesSDRStart;
+  end = salesSDREnd;
+  for (; start <= end && start < data.length; start++) {
+    const [name, profileImg, team, ...salesData] = data[start]
+    const total = salesData.reduce((sum, weekSales) => {
+      const numericValue = parseFloat(weekSales.substring(1).replace(/,/g, '')); // Remove the first character and convert to number
+      return sum + numericValue;
+    }, 0);
+    if (!teamParam || team.toLowerCase() === teamParam.toLowerCase()) { // Filter by team if specified
+      salesSDR.push({
+        name,
+        profileImg,
+        team,
+        sales: salesData,
+        total: parseFloat(total.toFixed(2)),
+      });
+    }
+  }
+
+  return { salesBookedDems, salesBookedMDS, salesSatDems, salesSatMDS, salesSDR };
 };
