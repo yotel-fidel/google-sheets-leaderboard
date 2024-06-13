@@ -74,66 +74,72 @@ const Leaderboard = () => {
 
   return (
     <div className="leaderboard-container mx-auto p-4 min-h-screen bg-gray-100 rounded-lg shadow-lg">
-      <h1 className='text-black text-center mb-2'>{timePeriod && getWeekRange(timePeriod, currentYear)}</h1>
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            role="combobox"
-            aria-expanded={open}
-            className="w-[200px] justify-between"
-          >
-            {value
-              ? dataOptionList.find((dataOptionItem) => dataOptionItem.value === value)?.label
-              : "Filter Data..."}
-            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-[200px] p-0">
-          <Command>
-            <CommandInput placeholder="Search Options..." />
-            <CommandList>
-              <CommandEmpty>No option found.</CommandEmpty>
-              <CommandGroup className="max-h-[200px] overflow-y-auto">
-                {dataOptionList.map((dataOptionItem) => (
-                  <CommandItem
-                    key={dataOptionItem.value}
-                    value={dataOptionItem.value}
-                    onSelect={(currentValue) => {
-                      setValue(currentValue === value ? "" : currentValue)
-                      setOpen(false)
-                      setTimePeriod(currentValue === 'default' ? currentWeekNumber : currentValue.replace(/week/g, ""))
-                    }}
-                  >
-                    <Check
-                      className={cn(
-                        "mr-2 h-4 w-4",
-                        value === dataOptionItem.value ? "opacity-100" : "opacity-0"
-                      )}
-                    />
-                    {dataOptionItem.label}
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            </CommandList>
-          </Command>
-        </PopoverContent>
-      </Popover>
+
       <Tabs defaultValue="bookedDems" className="w-full">
-        <TabsList>
-          <TabsTrigger value="bookedDems">Booked Dems</TabsTrigger>
-          <TabsTrigger value="bookedMDS">Booked MDS</TabsTrigger>
-          <TabsTrigger value="satDems">Sat Dems</TabsTrigger>
-          <TabsTrigger value="satMDS">Sat MDS</TabsTrigger>
-          <TabsTrigger value="salesSDR">Sales</TabsTrigger>
-        </TabsList>
+        <div className='flex flex-col gap-2'>
+          <div className='flex flex-wrap justify-between gap-2'>
+            <TabsList>
+              <TabsTrigger value="bookedDems">Booked Dems</TabsTrigger>
+              <TabsTrigger value="bookedMDS">Booked MDS</TabsTrigger>
+              <TabsTrigger value="satDems">Sat Dems</TabsTrigger>
+              <TabsTrigger value="satMDS">Sat MDS</TabsTrigger>
+              <TabsTrigger value="salesSDR">Sales</TabsTrigger>
+            </TabsList>
+            <Popover open={open} onOpenChange={setOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="default"
+                  role="combobox"
+                  aria-expanded={open}
+                  className="w-[200px] justify-between"
+                >
+                  {value
+                    ? dataOptionList.find((dataOptionItem) => dataOptionItem.value === value)?.label
+                    : "Filter Data..."}
+                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-[200px] p-0">
+                <Command>
+                  <CommandInput placeholder="Search Options..." />
+                  <CommandList>
+                    <CommandEmpty>No option found.</CommandEmpty>
+                    <CommandGroup className="max-h-[200px] overflow-y-auto">
+                      {dataOptionList.map((dataOptionItem) => (
+                        <CommandItem
+                          key={dataOptionItem.value}
+                          value={dataOptionItem.value}
+                          onSelect={(currentValue) => {
+                            setValue(currentValue === value ? "" : currentValue)
+                            setOpen(false)
+                            setTimePeriod(currentValue === 'default' ? currentWeekNumber : currentValue.replace(/week/g, ""))
+                          }}
+                        >
+                          <Check
+                            className={cn(
+                              "mr-2 h-4 w-4",
+                              value === dataOptionItem.value ? "opacity-100" : "opacity-0"
+                            )}
+                          />
+                          {dataOptionItem.label}
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
+          </div>
+          <h1 className='text-black text-center mb-2'>{timePeriod && getWeekRange(timePeriod, currentYear)}</h1>
+
+        </div>
         <TabsContent value="bookedDems" className="w-full">
           <h1 className="text-2xl text-black font-bold text-center mb-6">Booked Dems</h1>
           {loading && (<div className="flex justify-center w-full">
             <Loading />
           </div>)}
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full'>
-            {bookedDemsData && bookedDemsData.sort((a, b) => b.sales[timePeriod - 1] - a.sales[timePeriod - 1]).map((info, index) => (
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
+            {bookedDemsData && bookedDemsData.sort((a, b) => Number(b.sales[timePeriod - 1]) - Number(a.sales[timePeriod - 1])).map((info, index) => (
               <RankingCard key={index} info={info} index={index} currentWeekNumber={timePeriod} isShowTeam={true} />
             ))}
           </div>
@@ -144,7 +150,7 @@ const Leaderboard = () => {
             <Loading />
           </div>)}
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full'>
-            {bookedMDSData && bookedMDSData.sort((a, b) => b.sales[timePeriod - 1] - a.sales[timePeriod - 1]).map((info, index) => (
+            {bookedMDSData && bookedMDSData.sort((a, b) => Number(b.sales[timePeriod - 1]) - Number(a.sales[timePeriod - 1])).map((info, index) => (
               <RankingCard key={index} info={info} index={index} currentWeekNumber={timePeriod} isShowTeam={true} />
             ))}
           </div>
@@ -155,7 +161,7 @@ const Leaderboard = () => {
             <Loading />
           </div>)}
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full'>
-            {satDemsData && satDemsData.sort((a, b) => b.sales[timePeriod - 1] - a.sales[timePeriod - 1]).map((info, index) => (
+            {satDemsData && satDemsData.sort((a, b) => Number(b.sales[timePeriod - 1]) - Number(a.sales[timePeriod - 1])).map((info, index) => (
               <RankingCard key={index} info={info} index={index} currentWeekNumber={timePeriod} isShowTeam={true} />
             ))}
           </div>
@@ -166,7 +172,7 @@ const Leaderboard = () => {
             <Loading />
           </div>)}
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full'>
-            {satMDSData && satMDSData.sort((a, b) => b.sales[timePeriod - 1] - a.sales[timePeriod - 1]).map((info, index) => (
+            {satMDSData && satMDSData.sort((a, b) => Number(b.sales[timePeriod - 1]) - Number(a.sales[timePeriod - 1])).map((info, index) => (
               <RankingCard key={index} info={info} index={index} currentWeekNumber={timePeriod} isShowTeam={true} />
             ))}
           </div>
@@ -177,7 +183,7 @@ const Leaderboard = () => {
             <Loading />
           </div>)}
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full'>
-            {salesSDRData && salesSDRData.sort((a, b) => b.sales[timePeriod - 1] - a.sales[timePeriod - 1]).map((info, index) => (
+            {salesSDRData && salesSDRData.sort((a, b) => b.sales[timePeriod - 1].substring(1).replace(/,/g, '') - a.sales[timePeriod - 1].substring(1).replace(/,/g, '')).map((info, index) => (
               <RankingCard key={index} info={info} index={index} currentWeekNumber={timePeriod} isShowTeam={true} isCurrency={true} />
             ))}
           </div>
