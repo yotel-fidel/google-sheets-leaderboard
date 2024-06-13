@@ -27,11 +27,11 @@ export default function RankingCard({ info, index, currentWeekNumber, isShowTeam
         >
             <div className="item-container flex gap-1 justify-between items-center p-4 bg-white rounded-lg shadow-md hover:bg-gray-50 cursor-pointer">
                 <div className="left-side-container flex items-center">
-                    {!isCurrency && (<div className="ranking-container text-lg font-bold text-gray-700 mr-4">
+                    {!isCurrency && (<div className="ranking-container text-md font-bold text-gray-700 mr-4">
                         Rank {index + 1}
                     </div>)}
                     <div className="person-image-container flex flex-col items-left gap-1">
-                        {isCurrency && (<div className="ranking-container text-lg font-bold text-gray-700 mr-4">
+                        {isCurrency && (<div className="ranking-container text-md font-bold text-gray-700 mr-4">
                             Rank {index + 1}
                         </div>)}
                         <div className='flex flex-wrap gap-3'>
