@@ -219,6 +219,7 @@ const SalesPersonPage = ({ params }) => {
         setLoading(false);
       } catch (error) {
         console.error("Error fetching sales info:", error);
+        setLoading(false);
       }
     };
 
@@ -236,7 +237,13 @@ const SalesPersonPage = ({ params }) => {
           className="w-[150px] h-[150px] rounded-lg shadow-md object-cover"
           referrerPolicy="no-referrer"
         />}
-        {bookedDemsData && (<div className=''><h1 className="text-2xl text-black font-bold text-center">{bookedDemsData.name}</h1>
+        {bookedDemsData && !bookedDemsData.profileImg && <img
+          src={'/assets/images/default-person.webp'}
+          alt={bookedDemsData.name}
+          className="w-[150px] h-[150px] rounded-lg shadow-md object-cover"
+          referrerPolicy="no-referrer"
+        />}
+        {bookedDemsData && (<div className=''><h1 className="text-2xl text-black font-bold text-left">{bookedDemsData.name}</h1>
           <h2 className="text-lg font-semibold text-gray-700">
             Team: <Link
               href={`/team/${bookedDemsData.team.toLowerCase().replace(/\s/g, "_")}`}
@@ -269,7 +276,7 @@ const SalesPersonPage = ({ params }) => {
           <div className='grid md:grid-cols-2'>
             <div className='flex-1'>
               <div className="mt-4 text-xl font-semibold text-blue-600">
-                Total Booked Dems: {bookedDemsData.total}
+                Total Booked Dems: {bookedDemsData ? bookedDemsData.total : 0}
               </div>
 
               {bookedDemsDataGraph && (
@@ -281,7 +288,7 @@ const SalesPersonPage = ({ params }) => {
 
             <div className='flex-1'>
               <div className="mt-4 text-xl font-semibold text-blue-600">
-                Total Booked MDS: {bookedMDSData.total}
+                Total Booked MDS: {bookedMDSData ? bookedMDSData.total : 0}
               </div>
               {bookedMDSDataGraph && (
                 <div className=''>
@@ -292,7 +299,7 @@ const SalesPersonPage = ({ params }) => {
 
             <div className='flex-1'>
               <div className="mt-4 text-xl font-semibold text-blue-600">
-                Total Sat Dems: {satDemsData.total}
+                Total Sat Dems: {satDemsData ? satDemsData.total : 0}
               </div>
               {satDemsDataGraph && (
                 <div className=''>
@@ -302,7 +309,7 @@ const SalesPersonPage = ({ params }) => {
             </div>
             <div className='flex-1'>
               <div className="mt-4 text-xl font-semibold text-blue-600">
-                Total Sat MDS: {satMDSData.total}
+                Total Sat MDS: {satMDSData ? satMDSData.total : 0}
               </div>
               {satMDSDataGraph && (
                 <div className=''>
@@ -312,7 +319,7 @@ const SalesPersonPage = ({ params }) => {
             </div>
             <div className='flex-1'>
               <div className="mt-4 text-xl font-semibold text-blue-600">
-                Total Sales: £{salesSDRData.total}
+                Total Sales: £{salesSDRData ? salesSDRData.total : 0}
               </div>
               {salesSDRDataGraph && (
                 <div className=''>
@@ -321,6 +328,12 @@ const SalesPersonPage = ({ params }) => {
               )}
             </div>
           </div>
+        </div>
+      )}
+
+      {!bookedDemsData && !loading && (
+        <div className='flex justify-center'>
+          <h1>No data found.</h1>
         </div>
       )}
     </div>
