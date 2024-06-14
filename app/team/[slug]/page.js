@@ -15,6 +15,7 @@ import {
 import { Line } from 'react-chartjs-2';
 import { getWeekRange, getCurrentWeekAndYear } from '@/app/_utils'
 import Loading from '@/app/components/Loading';
+
 import ButtonWithLink from '@/app/components/Button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
@@ -212,8 +213,8 @@ const SalesTeamPage = ({ params }) => {
             <Loading />
           </div>)}
           {sortedBookedDemsData && (
-            <div className='flex flex-wrap flex-col md:flex-row'>
-              <AwardPodium first={sortedBookedDemsData[0]} second={sortedBookedDemsData[1]} third={sortedBookedDemsData[2]} currentWeekNumber={timePeriod} className='md:flex-1 w-full md:min-w-[500px]' />
+            <div className='flex flex-wrap flex-col lg:flex-row'>
+              <AwardPodium first={sortedBookedDemsData[0]} second={sortedBookedDemsData[1]} third={sortedBookedDemsData[2]} currentWeekNumber={timePeriod} className='self-center lg:self-start md:flex-1 w-full md:min-w-[500px]' />
               <div className='md:flex-[2_2_0%] grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4'>
                 {sortedBookedDemsData.map((info, index) => {
                   if (index >= 3) {
@@ -232,44 +233,84 @@ const SalesTeamPage = ({ params }) => {
           {loading && (<div className="flex justify-center w-full">
             <Loading />
           </div>)}
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full'>
-            {bookedMDSData && bookedMDSData.sort((a, b) => Number(b.sales[timePeriod - 1]) - Number(a.sales[timePeriod - 1])).map((info, index) => (
-              <RankingCard key={index} info={info} index={index} currentWeekNumber={timePeriod} />
-            ))}
-          </div>
+          {sortedBookedMDSData && (
+            <div className='flex flex-wrap flex-col lg:flex-row'>
+              <AwardPodium first={sortedBookedMDSData[0]} second={sortedBookedMDSData[1]} third={sortedBookedMDSData[2]} currentWeekNumber={timePeriod} className='self-center lg:self-start md:flex-1 w-full md:min-w-[500px]' />
+              <div className='md:flex-[2_2_0%] grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4'>
+                {sortedBookedMDSData.map((info, index) => {
+                  if (index >= 3) {
+                    return (
+                      <RankingCard key={index} info={info} index={index} currentWeekNumber={timePeriod} />
+                    );
+                  }
+                  return null;
+                })}
+              </div>
+            </div>
+          )}
         </TabsContent>
         <TabsContent value="satDems">
           <h1 className="text-2xl text-black font-bold text-center mb-6">Sat Dems</h1>
           {loading && (<div className="flex justify-center w-full">
             <Loading />
           </div>)}
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full'>
-            {satDemsData && satDemsData.sort((a, b) => Number(b.sales[timePeriod - 1]) - Number(a.sales[timePeriod - 1])).map((info, index) => (
-              <RankingCard key={index} info={info} index={index} currentWeekNumber={timePeriod} />
-            ))}
-          </div>
+          {sortedSatDemsData && (
+            <div className='flex flex-wrap flex-col lg:flex-row'>
+              <AwardPodium first={sortedSatDemsData[0]} second={sortedSatDemsData[1]} third={sortedSatDemsData[2]} currentWeekNumber={timePeriod} className='self-center lg:self-start md:flex-1 w-full md:min-w-[500px]' />
+              <div className='md:flex-[2_2_0%] grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4'>
+                {sortedSatDemsData.map((info, index) => {
+                  if (index >= 3) {
+                    return (
+                      <RankingCard key={index} info={info} index={index} currentWeekNumber={timePeriod} />
+                    );
+                  }
+                  return null;
+                })}
+              </div>
+            </div>
+          )}
         </TabsContent>
         <TabsContent value="satMDS">
           <h1 className="text-2xl text-black font-bold text-center mb-6">Sat MDS</h1>
           {loading && (<div className="flex justify-center w-full">
             <Loading />
           </div>)}
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full'>
-            {satMDSData && satMDSData.sort((a, b) => Number(b.sales[timePeriod - 1]) - Number(a.sales[timePeriod - 1])).map((info, index) => (
-              <RankingCard key={index} info={info} index={index} currentWeekNumber={timePeriod} />
-            ))}
-          </div>
+          {sortedSatMDSData && (
+            <div className='flex flex-wrap flex-col lg:flex-row'>
+              <AwardPodium first={sortedSatMDSData[0]} second={sortedSatMDSData[1]} third={sortedSatMDSData[2]} currentWeekNumber={timePeriod} className='self-center lg:self-start md:flex-1 w-full md:min-w-[500px]' />
+              <div className='md:flex-[2_2_0%] grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4'>
+                {sortedSatMDSData.map((info, index) => {
+                  if (index >= 3) {
+                    return (
+                      <RankingCard key={index} info={info} index={index} currentWeekNumber={timePeriod} />
+                    );
+                  }
+                  return null;
+                })}
+              </div>
+            </div>
+          )}
         </TabsContent>
         <TabsContent value="salesSDR">
           <h1 className="text-2xl text-black font-bold text-center mb-6">Sales</h1>
           {loading && (<div className="flex justify-center w-full">
             <Loading />
           </div>)}
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full'>
-            {salesSDRData && salesSDRData.sort((a, b) => b.sales[timePeriod - 1].substring(1).replace(/,/g, '') - a.sales[timePeriod - 1].substring(1).replace(/,/g, '')).map((info, index) => (
-              <RankingCard key={index} info={info} index={index} currentWeekNumber={timePeriod} isCurrency={true} />
-            ))}
-          </div>
+          {sortedSalesSDRData && (
+            <div className='flex flex-wrap flex-col lg:flex-row'>
+              <AwardPodium first={sortedSalesSDRData[0]} second={sortedSalesSDRData[1]} third={sortedSalesSDRData[2]} isCurrency={true} currentWeekNumber={timePeriod} className='self-center lg:self-start md:flex-1 w-full md:min-w-[500px]' />
+              <div className='md:flex-[2_2_0%] grid grid-cols-1 xl:grid-cols-2 gap-4'>
+                {sortedSalesSDRData.map((info, index) => {
+                  if (index >= 3) {
+                    return (
+                      <RankingCard key={index} info={info} index={index} currentWeekNumber={timePeriod} />
+                    );
+                  }
+                  return null;
+                })}
+              </div>
+            </div>
+          )}
         </TabsContent>
       </Tabs>
     </div>
