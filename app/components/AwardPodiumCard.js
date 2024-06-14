@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 
 const AwardPodiumCard = ({ info, isCurrency, currentWeekNumber, className = '' }) => {
     const formatLargeCurrency = (value) => {
@@ -12,29 +13,35 @@ const AwardPodiumCard = ({ info, isCurrency, currentWeekNumber, className = '' }
     };
 
     return (
-        <div className={`bg-[#9e0000] relative rounded-sm flex flex-col gap-1 items-center md:min-w-[100px] py-2 px-4 ${className}`}>
-            <div className=" text-white text-[12px] text-center font-bold rounded-full">{info.name}</div>
-            <div className="image-container w-12 h-12 rounded-full overflow-hidden">
-                {info.profileImg ? (
-                    <img
-                        src={`https://drive.google.com/thumbnail?id=${info.profileImg}&sz=w50`}
-                        alt={info.name}
-                        className="w-full h-full object-cover"
-                        referrerPolicy="no-referrer"
-                    />
-                ) : (
-                    <img
-                        src={'/assets/images/default-person.webp'}
-                        alt={info.name}
-                        className="w-full h-full object-cover"
-                        referrerPolicy="no-referrer"
-                    />
-                )}
+        <Link
+            href={`/sales-person/${info.name.toLowerCase().replace(/\s/g, "_")}`}
+            className=''
+            passHref
+        >
+            <div className={`bg-[#9e0000] relative rounded-sm flex flex-col gap-1 items-center justify-center md:min-w-[100px] py-2 px-4 ${className}`}>
+                <div className=" text-white text-[2vw] sm:text-[12px] text-center font-bold rounded-full">{info.name}</div>
+                <div className="image-container w-[8vw] h-[8vw] max-w-[48px] max-h-[48px] sm:w-12 sm:h-12 rounded-full overflow-hidden">
+                    {info.profileImg ? (
+                        <img
+                            src={`https://drive.google.com/thumbnail?id=${info.profileImg}&sz=w50`}
+                            alt={info.name}
+                            className="w-full h-full object-cover"
+                            referrerPolicy="no-referrer"
+                        />
+                    ) : (
+                        <img
+                            src={'/assets/images/default-person.webp'}
+                            alt={info.name}
+                            className="w-full h-full object-cover"
+                            referrerPolicy="no-referrer"
+                        />
+                    )}
+                </div>
+                <div className='absolute -bottom-[2vw] sm:-bottom-[20px] bg-white w-full shadow-sm rounded-b-sm'>
+                    <p className='text-center text-[2vw] sm:text-[14px]'>{isCurrency ? formatLargeCurrency(info.sales[currentWeekNumber - 1]) : info.sales[currentWeekNumber - 1]}</p>
+                </div>
             </div>
-            <div className='absolute -bottom-[20px] bg-white w-full shadow-sm rounded-b-sm'>
-                <p className='text-center text-[14px]'>{isCurrency ? formatLargeCurrency(info.sales[currentWeekNumber - 1]) : info.sales[currentWeekNumber - 1]}</p>
-            </div>
-        </div>
+        </Link>
     );
 };
 
