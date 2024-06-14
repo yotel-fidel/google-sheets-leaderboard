@@ -20,9 +20,9 @@ const AwardPodium = ({ first, second, third, isCurrency, currentWeekNumber, clas
                 className="w-full h-auto"
             />
             <div className="absolute top-0 left-1/2 transform translate-x-[-50%] gap-[15%] flex items-end justify-around">
-                <AwardPodiumCard info={second} currentWeekNumber={currentWeekNumber} className='mb-10' />
-                <AwardPodiumCard info={first} currentWeekNumber={currentWeekNumber} className='mb-24' />
-                <AwardPodiumCard info={third} currentWeekNumber={currentWeekNumber} className='mb-6' />
+                <AwardPodiumCard info={second} currentWeekNumber={currentWeekNumber} isCurrency={isCurrency} className='-mb-[4vw] sm:mb-10' />
+                <AwardPodiumCard info={first} currentWeekNumber={currentWeekNumber} isCurrency={isCurrency} className='mb-[8vw] sm:mb-24' />
+                <AwardPodiumCard info={third} currentWeekNumber={currentWeekNumber} isCurrency={isCurrency} className='-mb-[7.5vw] sm:mb-6' />
             </div>
         </div >
     );
