@@ -105,13 +105,31 @@ const extractData = (data) => {
   let start = salesBookedDemsStart;
   let end = salesBookedDemsEnd;
   for (; start <= end && start < data.length; start++) {
-    const [name, profileImg, team, ...salesData] = data[start]
+    const [name, profileImg, team, january, february, march, april, may, june, july, august, september, october, november, december, ...salesData] = data[start]
     const total = salesData.reduce((sum, weekSales) => sum + Number(weekSales), 0);
 
     salesBookedDems.push({
       name,
       profileImg,
       team,
+      weekly: salesData,
+      monthly: {
+        "1": january,
+        "2": february,
+        "3": march,
+        "4": april,
+        "5": may,
+        "6": june,
+        "7": july,
+        "8": august,
+        "9": september,
+        "10": october,
+        "11": november,
+        "12": december,
+      },
+      quarterly: {
+
+      },
       sales: salesData,
       total: parseFloat(total.toFixed(2)),
     });
@@ -120,14 +138,31 @@ const extractData = (data) => {
   start = salesBookedMDSStart;
   end = salesBookedMDSEnd;
   for (; start <= end && start < data.length; start++) {
-    const [name, profileImg, team, ...salesData] = data[start]
+    const [name, profileImg, team, january, february, march, april, may, june, july, august, september, october, november, december, ...salesData] = data[start]
     const total = salesData.reduce((sum, weekSales) => sum + Number(weekSales), 0);
 
     salesBookedMDS.push({
       name,
       profileImg,
       team,
-      sales: salesData,
+      weekly: salesData,
+      monthly: {
+        "1": january,
+        "2": february,
+        "3": march,
+        "4": april,
+        "5": may,
+        "6": june,
+        "7": july,
+        "8": august,
+        "9": september,
+        "10": october,
+        "11": november,
+        "12": december,
+      },
+      quarterly: {
+
+      },
       total: parseFloat(total.toFixed(2)),
     });
   }
@@ -135,14 +170,31 @@ const extractData = (data) => {
   start = salesSatDemsStart;
   end = salesSatDemsEnd;
   for (; start <= end && start < data.length; start++) {
-    const [name, profileImg, team, ...salesData] = data[start]
+    const [name, profileImg, team, january, february, march, april, may, june, july, august, september, october, november, december, ...salesData] = data[start]
     const total = salesData.reduce((sum, weekSales) => sum + Number(weekSales), 0);
 
     salesSatDems.push({
       name,
       profileImg,
       team,
-      sales: salesData,
+      weekly: salesData,
+      monthly: {
+        "1": january,
+        "2": february,
+        "3": march,
+        "4": april,
+        "5": may,
+        "6": june,
+        "7": july,
+        "8": august,
+        "9": september,
+        "10": october,
+        "11": november,
+        "12": december,
+      },
+      quarterly: {
+
+      },
       total: parseFloat(total.toFixed(2)),
     });
   }
@@ -150,14 +202,31 @@ const extractData = (data) => {
   start = salesSatMDSStart;
   end = salesSatMDSEnd;
   for (; start <= end && start < data.length; start++) {
-    const [name, profileImg, team, ...salesData] = data[start]
+    const [name, profileImg, team, january, february, march, april, may, june, july, august, september, october, november, december, ...salesData] = data[start]
     const total = salesData.reduce((sum, weekSales) => sum + Number(weekSales), 0);
 
     salesSatMDS.push({
       name,
       profileImg,
       team,
-      sales: salesData,
+      weekly: salesData,
+      monthly: {
+        "1": january,
+        "2": february,
+        "3": march,
+        "4": april,
+        "5": may,
+        "6": june,
+        "7": july,
+        "8": august,
+        "9": september,
+        "10": october,
+        "11": november,
+        "12": december,
+      },
+      quarterly: {
+
+      },
       total: parseFloat(total.toFixed(2)),
     });
   }
@@ -165,7 +234,7 @@ const extractData = (data) => {
   start = salesSDRStart;
   end = salesSDREnd;
   for (; start <= end && start < data.length; start++) {
-    const [name, profileImg, team, ...salesData] = data[start]
+    const [name, profileImg, team, january, february, march, april, may, june, july, august, september, october, november, december, ...salesData] = data[start]
     const total = salesData.reduce((sum, weekSales) => {
       const numericValue = parseFloat(weekSales.substring(1).replace(/,/g, '')); // Remove the first character and convert to number
       return sum + numericValue;
@@ -175,7 +244,24 @@ const extractData = (data) => {
       name,
       profileImg,
       team,
-      sales: salesData,
+      weekly: salesData,
+      monthly: {
+        "1": january,
+        "2": february,
+        "3": march,
+        "4": april,
+        "5": may,
+        "6": june,
+        "7": july,
+        "8": august,
+        "9": september,
+        "10": october,
+        "11": november,
+        "12": december,
+      },
+      quarterly: {
+
+      },
       total: parseFloat(total.toFixed(2)),
     });
   }
