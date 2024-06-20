@@ -1,3 +1,9 @@
+import { PERIOD_LIST, MONTH_LIST } from "@/lib/constants";
+
+export function capitalizeFirstLetter(word) {
+    return word.charAt(0).toUpperCase() + word.slice(1);
+}
+
 export function getCurrentWeekAndYear() {
     const today = new Date();
     const currentYear = today.getFullYear();
@@ -34,4 +40,116 @@ export function getWeekRange(weekNumber, year) {
     };
 
     return formatDateRange(startOfWeek, endOfWeek);
+}
+
+export function getQuarterRange(quarterNumber, year) {
+    if (quarterNumber < 1 || quarterNumber > 4) {
+        throw new Error("Invalid quarter number. Must be between 1 and 4.");
+    }
+
+    const startOfYear = new Date(year, 0, 1);
+    const startMonth = (quarterNumber - 1) * 3;
+    const startOfQuarter = new Date(year, startMonth, 1);
+
+    const endOfQuarter = new Date(year, startMonth + 3, 0); // Last day of the quarter
+
+    const formatDateRange = (start, end) => {
+        const options = { month: 'short', day: 'numeric' };
+        const startStr = start.toLocaleDateString('en-US', options);
+        const endStr = end.toLocaleDateString('en-US', options);
+        const yearStr = start.getFullYear();
+
+        return `Quarter ${quarterNumber} - ${startStr} to ${endStr}, ${yearStr}`;
+    };
+
+    return formatDateRange(startOfQuarter, endOfQuarter);
+}
+
+export function getMonthRange(monthNumber, year) {
+    if (monthNumber < 1 || monthNumber > 12) {
+        throw new Error("Invalid month number. Must be between 1 and 12.");
+    }
+
+    const startOfMonth = new Date(year, monthNumber - 1, 1);
+    const endOfMonth = new Date(year, monthNumber, 0); // Last day of the month
+
+    const formatDateRange = (start, end) => {
+        const options = { month: 'short', day: 'numeric' };
+        const startStr = start.toLocaleDateString('en-US', options);
+        const endStr = end.toLocaleDateString('en-US', options);
+        const yearStr = start.getFullYear();
+
+        return `${capitalizeFirstLetter(MONTH_LIST[monthNumber - 1])} - ${startStr} to ${endStr}, ${yearStr}`;
+    };
+
+    return formatDateRange(startOfMonth, endOfMonth);
+}
+
+export function getDateRange(period, periodNumber, year) {
+    period = period.toLowerCase(); // Convert period to lowercase for consistent comparison
+
+    switch (period) {
+        case PERIOD_LIST.WEEKLY.toLowerCase():
+            return getWeekRange(periodNumber, year);
+        case PERIOD_LIST.QUARTERLY.toLowerCase():
+            return getQuarterRange(periodNumber, year);
+        case PERIOD_LIST.MONTHLY.toLowerCase():
+            // const monthNumber = new Date(`${period} 1, ${year}`).getMonth() + 1;
+            return getMonthRange(periodNumber, year);
+        default:
+            throw new Error("Invalid period. Must be 'week', 'quarter', or a month name.");
+    }
+}
+
+export function parsePeriodString(periodString) {
+    // Extract the period (letters) and the number (digits) from the input string
+    const match = periodString.match(/([a-zA-Z]+)(\d+)/);
+
+    if (!match) {
+        throw new Error("Invalid period string format");
+    }
+
+    let period = match[1];
+    const number = match[2];
+
+    // Check if the input string is one of the month names (case-insensitive)
+    if (MONTH_LIST.includes(period.toLowerCase())) {
+        return {
+            period: PERIOD_LIST.MONTHLY.toLowerCase(),
+            number
+        };
+    }
+
+    // Add "ly" to the end of the period
+    period = `${period.toLowerCase()}ly`;
+
+    return {
+        period: period.toLowerCase(),
+        number: number
+    };
+}
+
+export function formatLargeCurrency(value) {
+    const removedCurrency = value[0];
+    const money = value.substring(1).replace(/,/g, '');
+
+    if (parseFloat(money) >= 1000) {
+        return `${removedCurrency}${(parseFloat(money) / 1000).toFixed(1)}k`;
+    }
+    return `${removedCurrency}${money}`;
+};
+
+export function getCurrencyOrScore(data, periodObject, isCurrency) {
+    console.log("PERIOOD:", periodObject.period)
+    switch (periodObject.period.toLowerCase()) {
+        case PERIOD_LIST.WEEKLY.toLowerCase():
+            return isCurrency ? formatLargeCurrency(data.weekly[periodObject.number - 1]) : data.weekly[periodObject.number - 1];
+        case PERIOD_LIST.QUARTERLY.toLowerCase():
+            return isCurrency ? formatLargeCurrency(data.quarterly[periodObject.number - 1]) : data.quarterly[periodObject.number - 1];
+        case PERIOD_LIST.MONTHLY.toLowerCase():
+            // NO MINUS 1 AS IT IS CALLING AN OBJECT
+            return isCurrency ? formatLargeCurrency(data.monthly[periodObject.number]) : data.monthly[periodObject.number];
+        default:
+            throw new Error("There is something wrong with getting the currency or score data.");
+    }
 }
