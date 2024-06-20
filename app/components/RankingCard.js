@@ -18,7 +18,7 @@ export default function RankingCard({ info, index, periodObject, isShowTeam, isC
         >
             <div className="item-container flex gap-1 justify-between items-center p-4 bg-white rounded-lg shadow-md hover:bg-gray-50 cursor-pointer">
                 <div className="left-side-container flex items-center">
-                    {!isCurrency && (<div className="ranking-container text-md font-bold text-gray-700 mr-4">
+                    {!isCurrency && (<div className="ranking-container text-[14px] font-bold text-gray-700 mr-4">
                         Rank {index + 1}
                     </div>)}
                     <div className="person-image-container flex flex-col items-left gap-1">
@@ -44,7 +44,7 @@ export default function RankingCard({ info, index, periodObject, isShowTeam, isC
                                 )}
                             </div>
                             <div className='flex flex-col justify-center'>
-                                <p className="sales-person-name text-gray-700">{info.name}</p>
+                                <p className="sales-person-name text-gray-700 text-[14px]">{info.name}</p>
                                 {isShowTeam && (<p
                                     className="sales-person-name text-[12px] text-gray-700 hover:underline"
                                     onClick={(e) => handlePersonTeamClick(e, info.team)}
