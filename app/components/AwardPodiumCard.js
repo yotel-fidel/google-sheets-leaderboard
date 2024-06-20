@@ -1,7 +1,8 @@
 import React from 'react';
 import Link from 'next/link';
+import { getCurrencyOrScore } from '../_utils';
 
-const AwardPodiumCard = ({ info, isCurrency, currentWeekNumber, className = '' }) => {
+const AwardPodiumCard = ({ info, isCurrency, periodObject, className = '' }) => {
     const formatLargeCurrency = (value) => {
         const removedCurrency = value[0];
         const money = value.substring(1).replace(/,/g, '');
@@ -38,7 +39,7 @@ const AwardPodiumCard = ({ info, isCurrency, currentWeekNumber, className = '' }
                     )}
                 </div>
                 <div className='absolute -bottom-[2vw] sm:-bottom-[20px] bg-white w-full shadow-sm rounded-b-sm'>
-                    <p className='text-center text-[2vw] sm:text-[14px]'>{isCurrency ? formatLargeCurrency(info.sales[currentWeekNumber - 1]) : info.sales[currentWeekNumber - 1]}</p>
+                    <p className='text-center text-[2vw] sm:text-[14px]'>{info && getCurrencyOrScore(info, periodObject, isCurrency)}</p>
                 </div>
             </div>
         </Link>
