@@ -13,8 +13,9 @@ import {
   Legend,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
-import { getWeekRange, getCurrentWeekAndYear } from '@/app/_utils'
+import { getWeekRange, getCurrentWeekAndYear, parsePeriodString, getDateRange } from '@/app/_utils'
 import Loading from '@/app/components/Loading';
+
 
 import ButtonWithLink from '@/app/components/Button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -36,6 +37,7 @@ import {
 } from "@/components/ui/popover"
 import RankingCard from '@/app/components/RankingCard';
 import AwardPodium from '@/app/components/AwardPodium';
+import { PERIOD_LIST } from '@/lib/constants';
 
 ChartJS.register(
   CategoryScale,
@@ -69,7 +71,23 @@ const dataOptionList = [
     value: `week${i + 1}`,
     label: `Week ${i + 1}`,
   })),
+  ...[
+    { value: "january1", label: "January" },
+    { value: "february2", label: "February" },
+    { value: "march3", label: "March" },
+    { value: "april4", label: "April" },
+    { value: "may5", label: "May" },
+    { value: "june6", label: "June" },
+    { value: "july7", label: "July" },
+    { value: "august8", label: "August" },
+    { value: "september9", label: "September" },
+    { value: "october10", label: "October" },
+    { value: "november11", label: "November" },
+    { value: "december12", label: "December" }
+  ]
 ];
+
+
 
 const SalesTeamPage = ({ params }) => {
   const [bookedDemsData, setBookedDemsData] = useState(null);
@@ -85,14 +103,30 @@ const SalesTeamPage = ({ params }) => {
   const [sortedSalesSDRData, setSortedSalesSDRData] = useState([]);
 
   // Helper function to create a deep copy of the array and sort it
-  const sortData = (dataArray, currentWeekNumber, isCurrency = false) => {
+  const sortData = (dataArray, period, periodNumber, isCurrency = false) => {
     return [...dataArray].sort((a, b) => {
-      const aValue = isCurrency
-        ? parseFloat(a.sales[currentWeekNumber - 1].substring(1).replace(/,/g, ''))
-        : Number(a.sales[currentWeekNumber - 1]);
-      const bValue = isCurrency
-        ? parseFloat(b.sales[currentWeekNumber - 1].substring(1).replace(/,/g, ''))
-        : Number(b.sales[currentWeekNumber - 1]);
+      let aValue, bValue;
+
+      if (period.toLowerCase().startsWith(PERIOD_LIST.WEEKLY.toLowerCase())) {
+        const weekIndex = periodNumber - 1;
+        aValue = isCurrency
+          ? parseFloat(a.weekly[weekIndex].substring(1).replace(/,/g, ''))
+          : Number(a.weekly[weekIndex]);
+        bValue = isCurrency
+          ? parseFloat(b.weekly[weekIndex].substring(1).replace(/,/g, ''))
+          : Number(b.weekly[weekIndex]);
+      } else {
+        // NO MINUS 1 (like in weekIndex) AS IT IS CALLING AN OBJECT
+        const month = periodNumber;
+        // console.log("MONTH: ", month)
+        // console.log("DATA a & b: ", Number(a.monthly[month]), Number(b.monthly[month]))
+        aValue = isCurrency
+          ? parseFloat(a.monthly[month].substring(1).replace(/,/g, ''))
+          : Number(a.monthly[month]);
+        bValue = isCurrency
+          ? parseFloat(b.monthly[month].substring(1).replace(/,/g, ''))
+          : Number(b.monthly[month]);
+      }
 
       return bValue - aValue;
     });
@@ -103,8 +137,12 @@ const SalesTeamPage = ({ params }) => {
 
   const [open, setOpen] = useState(false)
   const [value, setValue] = useState("")
+
   const { currentWeekNumber, currentYear } = getCurrentWeekAndYear();
-  const [timePeriod, setTimePeriod] = useState(currentWeekNumber);
+  const [timePeriod, setTimePeriod] = useState({
+    period: PERIOD_LIST.WEEKLY.toLowerCase(),
+    number: currentWeekNumber
+  });
 
   useEffect(() => {
     const fetchsalesTeamData = async () => {
@@ -113,17 +151,17 @@ const SalesTeamPage = ({ params }) => {
         const response = await fetch(`/api/getSheetDataByTeam?team=${team}`);
         const data = await response.json();
 
-        setBookedDemsData(sortData(data.bookedDemsData, currentWeekNumber));
-        setBookedMDSData(sortData(data.bookedMDSData, currentWeekNumber));
-        setSatDemsData(sortData(data.satDemsData, currentWeekNumber));
-        setSatMDSData(sortData(data.satMDSData, currentWeekNumber));
-        setSalesSDRData(sortData(data.salesSDRData, currentWeekNumber, true));
+        setBookedDemsData(sortData(data.bookedDemsData, PERIOD_LIST.WEEKLY, currentWeekNumber));
+        setBookedMDSData(sortData(data.bookedMDSData, PERIOD_LIST.WEEKLY, currentWeekNumber));
+        setSatDemsData(sortData(data.satDemsData, PERIOD_LIST.WEEKLY, currentWeekNumber));
+        setSatMDSData(sortData(data.satMDSData, PERIOD_LIST.WEEKLY, currentWeekNumber));
+        setSalesSDRData(sortData(data.salesSDRData, PERIOD_LIST.WEEKLY, currentWeekNumber, true));
 
-        setSortedBookedDemsData(sortData(data.bookedDemsData, currentWeekNumber));
-        setSortedBookedMDSData(sortData(data.bookedMDSData, currentWeekNumber));
-        setSortedSatDemsData(sortData(data.satDemsData, currentWeekNumber));
-        setSortedSatMDSData(sortData(data.satMDSData, currentWeekNumber));
-        setSortedSalesSDRData(sortData(data.salesSDRData, currentWeekNumber, true));
+        setSortedBookedDemsData(sortData(data.bookedDemsData, PERIOD_LIST.WEEKLY, currentWeekNumber));
+        setSortedBookedMDSData(sortData(data.bookedMDSData, PERIOD_LIST.WEEKLY, currentWeekNumber));
+        setSortedSatDemsData(sortData(data.satDemsData, PERIOD_LIST.WEEKLY, currentWeekNumber));
+        setSortedSatMDSData(sortData(data.satMDSData, PERIOD_LIST.WEEKLY, currentWeekNumber));
+        setSortedSalesSDRData(sortData(data.salesSDRData, PERIOD_LIST.WEEKLY, currentWeekNumber, true));
 
         setLoading(false);
       } catch (error) {
@@ -175,16 +213,24 @@ const SalesTeamPage = ({ params }) => {
                             setValue(currentValue === value ? "" : currentValue)
                             setOpen(false)
 
-                            const newValue = currentValue.replace(/week/g, "");
-                            console.log("Week selected: ", newValue)
-                            const weekNumber = currentValue === 'default' ? currentWeekNumber : newValue;
-                            setTimePeriod(weekNumber)
+                            // const newValue = currentValue.replace(/week/g, "");
+                            const defaultValue = `${PERIOD_LIST.WEEKLY.toLowerCase().replace(/ly/g, "")}${currentWeekNumber}`
+                            const newValue = parsePeriodString((currentValue === 'default' || currentValue === value) ? defaultValue : currentValue);
 
-                            setSortedBookedDemsData(sortData(bookedDemsData, weekNumber));
-                            setSortedBookedMDSData(sortData(bookedMDSData, weekNumber));
-                            setSortedSatDemsData(sortData(satDemsData, weekNumber));
-                            setSortedSatMDSData(sortData(satMDSData, weekNumber));
-                            setSortedSalesSDRData(sortData(salesSDRData, weekNumber, true));
+                            // console.log("Week selected: ", newValue.number)
+                            const periodNumber = (currentValue === 'default' || currentValue === value) ? currentWeekNumber : newValue.number;
+                            setTimePeriod(newValue)
+
+                            // console.log("testingg currentValue: ", currentValue)
+                            // console.log("CurrentValue: ", currentValue, "|| Value: ", value)
+                            // console.log("Before setting sortedbookedDems: ", newValue.period)
+                            // console.log("Period number: ", newValue.number)
+
+                            setSortedBookedDemsData(sortData(bookedDemsData, newValue.period, periodNumber));
+                            setSortedBookedMDSData(sortData(bookedMDSData, newValue.period, periodNumber));
+                            setSortedSatDemsData(sortData(satDemsData, newValue.period, periodNumber));
+                            setSortedSatMDSData(sortData(satMDSData, newValue.period, periodNumber));
+                            setSortedSalesSDRData(sortData(salesSDRData, newValue.period, periodNumber, true));
                           }}
                         >
                           <Check
@@ -204,7 +250,7 @@ const SalesTeamPage = ({ params }) => {
           </div>
           {bookedDemsData && (<div>
             <h1 className="text-2xl text-black font-bold text-center">{bookedDemsData[0] && bookedDemsData[0].team}</h1>
-            <p className='text-black text-center mb-6'>{timePeriod && getWeekRange(timePeriod, currentYear)}</p>
+            <p className='text-black text-center mb-6'>{timePeriod && getDateRange(timePeriod.period, timePeriod.number, currentYear)}</p>
           </div>)}
         </div>
         <TabsContent value="bookedDems" className="w-full">
@@ -213,13 +259,13 @@ const SalesTeamPage = ({ params }) => {
             <Loading />
           </div>)}
           {sortedBookedDemsData && (
-            <div className='flex flex-wrap flex-col lg:flex-row'>
-              <AwardPodium first={sortedBookedDemsData[0]} second={sortedBookedDemsData[1]} third={sortedBookedDemsData[2]} currentWeekNumber={timePeriod} className='self-center lg:self-start md:flex-1 w-full md:min-w-[500px]' />
+            <div className='flex flex-wrap flex-col lg:flex-row lg:items-center'>
+              <AwardPodium first={sortedBookedDemsData[0]} second={sortedBookedDemsData[1]} third={sortedBookedDemsData[2]} periodObject={timePeriod} className='self-center lg:self-start md:flex-1 w-full md:min-w-[500px]' />
               <div className='md:flex-[2_2_0%] grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4'>
                 {sortedBookedDemsData.map((info, index) => {
                   if (index >= 3) {
                     return (
-                      <RankingCard key={index} info={info} index={index} currentWeekNumber={timePeriod} />
+                      <RankingCard key={index} info={info} index={index} periodObject={timePeriod} />
                     );
                   }
                   return null;
@@ -234,13 +280,13 @@ const SalesTeamPage = ({ params }) => {
             <Loading />
           </div>)}
           {sortedBookedMDSData && (
-            <div className='flex flex-wrap flex-col lg:flex-row'>
-              <AwardPodium first={sortedBookedMDSData[0]} second={sortedBookedMDSData[1]} third={sortedBookedMDSData[2]} currentWeekNumber={timePeriod} className='self-center lg:self-start md:flex-1 w-full md:min-w-[500px]' />
+            <div className='flex flex-wrap flex-col lg:flex-row lg:items-center'>
+              <AwardPodium first={sortedBookedMDSData[0]} second={sortedBookedMDSData[1]} third={sortedBookedMDSData[2]} periodObject={timePeriod} className='self-center lg:self-start md:flex-1 w-full md:min-w-[500px]' />
               <div className='md:flex-[2_2_0%] grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4'>
                 {sortedBookedMDSData.map((info, index) => {
                   if (index >= 3) {
                     return (
-                      <RankingCard key={index} info={info} index={index} currentWeekNumber={timePeriod} />
+                      <RankingCard key={index} info={info} index={index} periodObject={timePeriod} />
                     );
                   }
                   return null;
@@ -255,13 +301,13 @@ const SalesTeamPage = ({ params }) => {
             <Loading />
           </div>)}
           {sortedSatDemsData && (
-            <div className='flex flex-wrap flex-col lg:flex-row'>
-              <AwardPodium first={sortedSatDemsData[0]} second={sortedSatDemsData[1]} third={sortedSatDemsData[2]} currentWeekNumber={timePeriod} className='self-center lg:self-start md:flex-1 w-full md:min-w-[500px]' />
+            <div className='flex flex-wrap flex-col lg:flex-row lg:items-center'>
+              <AwardPodium first={sortedSatDemsData[0]} second={sortedSatDemsData[1]} third={sortedSatDemsData[2]} periodObject={timePeriod} className='self-center lg:self-start md:flex-1 w-full md:min-w-[500px]' />
               <div className='md:flex-[2_2_0%] grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4'>
                 {sortedSatDemsData.map((info, index) => {
                   if (index >= 3) {
                     return (
-                      <RankingCard key={index} info={info} index={index} currentWeekNumber={timePeriod} />
+                      <RankingCard key={index} info={info} index={index} periodObject={timePeriod} />
                     );
                   }
                   return null;
@@ -276,13 +322,13 @@ const SalesTeamPage = ({ params }) => {
             <Loading />
           </div>)}
           {sortedSatMDSData && (
-            <div className='flex flex-wrap flex-col lg:flex-row'>
-              <AwardPodium first={sortedSatMDSData[0]} second={sortedSatMDSData[1]} third={sortedSatMDSData[2]} currentWeekNumber={timePeriod} className='self-center lg:self-start md:flex-1 w-full md:min-w-[500px]' />
+            <div className='flex flex-wrap flex-col lg:flex-row lg:items-center'>
+              <AwardPodium first={sortedSatMDSData[0]} second={sortedSatMDSData[1]} third={sortedSatMDSData[2]} periodObject={timePeriod} className='self-center lg:self-start md:flex-1 w-full md:min-w-[500px]' />
               <div className='md:flex-[2_2_0%] grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4'>
                 {sortedSatMDSData.map((info, index) => {
                   if (index >= 3) {
                     return (
-                      <RankingCard key={index} info={info} index={index} currentWeekNumber={timePeriod} />
+                      <RankingCard key={index} info={info} index={index} periodObject={timePeriod} />
                     );
                   }
                   return null;
@@ -297,13 +343,13 @@ const SalesTeamPage = ({ params }) => {
             <Loading />
           </div>)}
           {sortedSalesSDRData && (
-            <div className='flex flex-wrap flex-col lg:flex-row'>
-              <AwardPodium first={sortedSalesSDRData[0]} second={sortedSalesSDRData[1]} third={sortedSalesSDRData[2]} isCurrency={true} currentWeekNumber={timePeriod} className='self-center lg:self-start md:flex-1 w-full md:min-w-[500px]' />
+            <div className='flex flex-wrap flex-col lg:flex-row lg:items-center'>
+              <AwardPodium first={sortedSalesSDRData[0]} second={sortedSalesSDRData[1]} third={sortedSalesSDRData[2]} isCurrency={true} periodObject={timePeriod} className='self-center lg:self-start md:flex-1 w-full md:min-w-[500px]' />
               <div className='md:flex-[2_2_0%] grid grid-cols-1 xl:grid-cols-2 gap-4'>
                 {sortedSalesSDRData.map((info, index) => {
                   if (index >= 3) {
                     return (
-                      <RankingCard key={index} info={info} index={index} currentWeekNumber={timePeriod} />
+                      <RankingCard key={index} info={info} index={index} periodObject={timePeriod} />
                     );
                   }
                   return null;
