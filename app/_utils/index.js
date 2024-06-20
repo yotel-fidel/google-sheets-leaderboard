@@ -153,3 +153,34 @@ export function getCurrencyOrScore(data, periodObject, isCurrency) {
             throw new Error("There is something wrong with getting the currency or score data.");
     }
 }
+
+
+// Helper function to create a deep copy of the array and sort it
+export const sortDataBasedOnPeriod = (dataArray, period, periodNumber, isCurrency = false) => {
+    return [...dataArray].sort((a, b) => {
+        let aValue, bValue;
+
+        if (period.toLowerCase().startsWith(PERIOD_LIST.WEEKLY.toLowerCase())) {
+            const weekIndex = periodNumber - 1;
+            aValue = isCurrency
+                ? parseFloat(a.weekly[weekIndex].substring(1).replace(/,/g, ''))
+                : Number(a.weekly[weekIndex]);
+            bValue = isCurrency
+                ? parseFloat(b.weekly[weekIndex].substring(1).replace(/,/g, ''))
+                : Number(b.weekly[weekIndex]);
+        } else {
+            // NO MINUS 1 (like in weekIndex) AS IT IS CALLING AN OBJECT
+            const month = periodNumber;
+            // console.log("MONTH: ", month)
+            // console.log("DATA a & b: ", Number(a.monthly[month]), Number(b.monthly[month]))
+            aValue = isCurrency
+                ? parseFloat(a.monthly[month].substring(1).replace(/,/g, ''))
+                : Number(a.monthly[month]);
+            bValue = isCurrency
+                ? parseFloat(b.monthly[month].substring(1).replace(/,/g, ''))
+                : Number(b.monthly[month]);
+        }
+
+        return bValue - aValue;
+    });
+};
