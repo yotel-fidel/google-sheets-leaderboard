@@ -1,23 +1,14 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation'
+import { getCurrencyOrScore } from '../_utils';
 
-export default function RankingCard({ info, index, currentWeekNumber, isShowTeam, isCurrency }) {
+export default function RankingCard({ info, index, periodObject, isShowTeam, isCurrency }) {
     const router = useRouter()
 
     const handlePersonTeamClick = (e, personLink) => {
         e.preventDefault()
         router.push(`/team/${personLink.toLowerCase().replace(/\s/g, "_")}`)
     }
-
-    const formatLargeCurrency = (value) => {
-        const removedCurrency = value[0];
-        const money = value.substring(1).replace(/,/g, '');
-
-        if (parseFloat(money) >= 1000) {
-            return `${removedCurrency}${(parseFloat(money) / 1000).toFixed(1)}k`;
-        }
-        return `${removedCurrency}${money}`;
-    };
 
     return (
         <Link
@@ -63,7 +54,7 @@ export default function RankingCard({ info, index, currentWeekNumber, isShowTeam
                     </div>
                 </div>
                 <div className="booking-number text-xl font-semibold text-blue-600">
-                    {isCurrency ? formatLargeCurrency(info.sales[currentWeekNumber - 1]) : info.sales[currentWeekNumber - 1]}
+                    {info && getCurrencyOrScore(info, periodObject, isCurrency)}
                 </div>
             </div>
         </Link>
