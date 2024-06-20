@@ -145,6 +145,24 @@ export const optionsSalesSDR = {
   elements: elementConfig,
 };
 
+export const optionsAllData = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: 'top',
+    },
+    title: {
+      display: true,
+      text: 'Weekly Chart',
+    },
+  },
+  // elements: {
+  //   point: {
+  //     backgroundColor: "#9e0000"
+  //   }
+  // },
+};
+
 const SalesPersonPage = ({ params }) => {
   const [bookedDemsData, setBookedDemsData] = useState(null);
   const [bookedMDSData, setBookedMDSData] = useState(null);
@@ -156,6 +174,7 @@ const SalesPersonPage = ({ params }) => {
   const [satDemsDataGraph, setSatDemsDataGraph] = useState(null);
   const [satMDSDataGraph, setSatMDSDataGraph] = useState(null);
   const [salesSDRDataGraph, setSalesSDRDataGraph] = useState(null);
+  const [allDataGraph, setAllDataGraph] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -213,6 +232,39 @@ const SalesPersonPage = ({ params }) => {
             {
               label: 'Sales',
               data: data.salesSDRData.sales.map(sale => sale.substring(1).replace(/,/g, '')),
+            },
+          ],
+        })
+        setAllDataGraph({
+          labels: data.salesSDRData.sales.map((week, index) => `Week ${index + 1}`),
+          datasets: [
+            {
+              label: 'Booked Dems',
+              data: data.bookedDemsData.sales,
+              borderColor: "#e62f36",
+              pointBackgroundColor: "#9e0000",
+              tension: 0.5,
+            },
+            {
+              label: 'Booked MDS',
+              data: data.bookedMDSData.sales,
+              borderColor: "#90e0ef",
+              pointBackgroundColor: "#023047",
+              tension: 0.5,
+            },
+            {
+              label: 'Sat Dems',
+              data: data.satDemsData.sales,
+              borderColor: "#57cc99",
+              pointBackgroundColor: "#414833",
+              tension: 0.5,
+            },
+            {
+              label: 'Sat MDS',
+              data: data.satMDSData.sales,
+              borderColor: "#9f86c0",
+              pointBackgroundColor: "#480ca8",
+              tension: 0.5,
             },
           ],
         })
@@ -324,6 +376,16 @@ const SalesPersonPage = ({ params }) => {
               {salesSDRDataGraph && (
                 <div className=''>
                   <Line options={optionsSalesSDR} data={salesSDRDataGraph} />
+                </div>
+              )}
+            </div>
+            <div className='flex-1'>
+              <div className="mt-4 text-xl font-semibold text-blue-600">
+                All Data
+              </div>
+              {salesSDRDataGraph && (
+                <div className=''>
+                  <Line options={optionsAllData} data={allDataGraph} />
                 </div>
               )}
             </div>
