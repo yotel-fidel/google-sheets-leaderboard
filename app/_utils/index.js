@@ -196,3 +196,22 @@ export const sortDataBasedOnPeriod = (dataArray, period, periodNumber, isCurrenc
         return bValue - aValue;
     });
 };
+
+export function addAllValues(...values) {
+    return values.reduce((sum, value) => {
+        // Convert value to string and remove commas and currency signs (dollar and pound)
+        let cleanedValue = value.toString().replace(/[£$,]/g, '');
+        // Convert the cleaned value to a number and add to the sum
+        return sum + parseFloat(cleanedValue);
+    }, 0);
+}
+
+export function convertToStrMoney(currency, amount) {
+    // Ensure the amount is a number and has two decimal places
+    let formattedAmount = Number(amount).toFixed(2);
+
+    // Add commas as thousands separators
+    formattedAmount = formattedAmount.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+    return currency + formattedAmount;
+}
