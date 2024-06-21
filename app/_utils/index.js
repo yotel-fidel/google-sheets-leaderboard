@@ -148,10 +148,11 @@ export function getCurrencyOrScore(data, periodObject, isCurrency) {
         case PERIOD_LIST.WEEKLY.toLowerCase():
             return isCurrency ? formatLargeCurrency(data.weekly[periodObject.number - 1]) : data.weekly[periodObject.number - 1];
         case PERIOD_LIST.QUARTERLY.toLowerCase():
+            // NO MINUS 1 AS IT IS CALLING AN OBJECT
             return isCurrency ? formatLargeCurrency(data.quarterly[periodObject.number - 1]) : data.quarterly[periodObject.number - 1];
         case PERIOD_LIST.MONTHLY.toLowerCase():
             // NO MINUS 1 AS IT IS CALLING AN OBJECT
-            return isCurrency ? formatLargeCurrency(data.monthly[periodObject.number]) : data.monthly[periodObject.number];
+            return isCurrency ? formatLargeCurrency(data.monthly[periodObject.number - 1]) : data.monthly[periodObject.number - 1];
         default:
             throw new Error("There is something wrong with getting the currency or score data.");
     }
@@ -171,17 +172,25 @@ export const sortDataBasedOnPeriod = (dataArray, period, periodNumber, isCurrenc
             bValue = isCurrency
                 ? parseFloat(b.weekly[weekIndex].substring(1).replace(/,/g, ''))
                 : Number(b.weekly[weekIndex]);
+        } else if (period.toLowerCase().startsWith(PERIOD_LIST.QUARTERLY.toLowerCase())) {
+            const quarterIndex = periodNumber - 1;
+            aValue = isCurrency
+                ? parseFloat(a.quarterly[quarterIndex].substring(1).replace(/,/g, ''))
+                : Number(a.quarterly[quarterIndex]);
+            bValue = isCurrency
+                ? parseFloat(b.quarterly[quarterIndex].substring(1).replace(/,/g, ''))
+                : Number(b.quarterly[quarterIndex]);
         } else {
             // NO MINUS 1 (like in weekIndex) AS IT IS CALLING AN OBJECT
-            const month = periodNumber;
+            const monthIndex = periodNumber - 1;
             // console.log("MONTH: ", month)
             // console.log("DATA a & b: ", Number(a.monthly[month]), Number(b.monthly[month]))
             aValue = isCurrency
-                ? parseFloat(a.monthly[month].substring(1).replace(/,/g, ''))
-                : Number(a.monthly[month]);
+                ? parseFloat(a.monthly[monthIndex].substring(1).replace(/,/g, ''))
+                : Number(a.monthly[monthIndex]);
             bValue = isCurrency
-                ? parseFloat(b.monthly[month].substring(1).replace(/,/g, ''))
-                : Number(b.monthly[month]);
+                ? parseFloat(b.monthly[monthIndex].substring(1).replace(/,/g, ''))
+                : Number(b.monthly[monthIndex]);
         }
 
         return bValue - aValue;
