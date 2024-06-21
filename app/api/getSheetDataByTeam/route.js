@@ -1,7 +1,7 @@
 // File: pages/api/getSheetDataByTeam.js
 import { NextResponse } from 'next/server';
 import { google } from 'googleapis';
-import { getCurrentWeekAndYear } from '@/app/_utils';
+import { getCurrentWeekAndYear, addAllValues, convertToStrMoney } from '@/app/_utils';
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
@@ -112,29 +112,36 @@ const extractAndFilterData = (data, teamParam) => {
   for (; start <= end && start < data.length; start++) {
     const [name, profileImg, team, january, february, march, april, may, june, july, august, september, october, november, december, ...salesData] = data[start];
     const total = salesData.reduce((sum, weekSales) => sum + Number(weekSales), 0);
+    const quarter1 = addAllValues(january, february, march);
+    const quarter2 = addAllValues(april, may, june);
+    const quarter3 = addAllValues(july, august, september);
+    const quarter4 = addAllValues(october, november, december);
     if (!teamParam || team.toLowerCase() === teamParam.toLowerCase()) { // Filter by team if specified
       salesBookedDems.push({
         name,
         profileImg,
         team,
         weekly: salesData,
-        monthly: {
-          "1": january,
-          "2": february,
-          "3": march,
-          "4": april,
-          "5": may,
-          "6": june,
-          "7": july,
-          "8": august,
-          "9": september,
-          "10": october,
-          "11": november,
-          "12": december,
-        },
-        quarterly: {
-
-        },
+        monthly: [
+          january,
+          february,
+          march,
+          april,
+          may,
+          june,
+          july,
+          august,
+          september,
+          october,
+          november,
+          december,
+        ],
+        quarterly: [
+          "" + quarter1,
+          "" + quarter2,
+          "" + quarter4,
+          "" + quarter4,
+        ],
         total: parseFloat(total.toFixed(2)),
       });
     }
@@ -151,23 +158,26 @@ const extractAndFilterData = (data, teamParam) => {
         profileImg,
         team,
         weekly: salesData,
-        monthly: {
-          "1": january,
-          "2": february,
-          "3": march,
-          "4": april,
-          "5": may,
-          "6": june,
-          "7": july,
-          "8": august,
-          "9": september,
-          "10": october,
-          "11": november,
-          "12": december,
-        },
-        quarterly: {
-
-        },
+        monthly: [
+          january,
+          february,
+          march,
+          april,
+          may,
+          june,
+          july,
+          august,
+          september,
+          october,
+          november,
+          december,
+        ],
+        quarterly: [
+          "" + addAllValues(january, february, march),
+          "" + addAllValues(april, may, june),
+          "" + addAllValues(july, august, september),
+          "" + addAllValues(october, november, december),
+        ],
         total: parseFloat(total.toFixed(2)),
       });
     }
@@ -184,23 +194,26 @@ const extractAndFilterData = (data, teamParam) => {
         profileImg,
         team,
         weekly: salesData,
-        monthly: {
-          "1": january,
-          "2": february,
-          "3": march,
-          "4": april,
-          "5": may,
-          "6": june,
-          "7": july,
-          "8": august,
-          "9": september,
-          "10": october,
-          "11": november,
-          "12": december,
-        },
-        quarterly: {
-
-        },
+        monthly: [
+          january,
+          february,
+          march,
+          april,
+          may,
+          june,
+          july,
+          august,
+          september,
+          october,
+          november,
+          december,
+        ],
+        quarterly: [
+          "" + addAllValues(january, february, march),
+          "" + addAllValues(april, may, june),
+          "" + addAllValues(july, august, september),
+          "" + addAllValues(october, november, december),
+        ],
         total: parseFloat(total.toFixed(2)),
       });
     }
@@ -217,23 +230,26 @@ const extractAndFilterData = (data, teamParam) => {
         profileImg,
         team,
         weekly: salesData,
-        monthly: {
-          "1": january,
-          "2": february,
-          "3": march,
-          "4": april,
-          "5": may,
-          "6": june,
-          "7": july,
-          "8": august,
-          "9": september,
-          "10": october,
-          "11": november,
-          "12": december,
-        },
-        quarterly: {
-
-        },
+        monthly: [
+          january,
+          february,
+          march,
+          april,
+          may,
+          june,
+          july,
+          august,
+          september,
+          october,
+          november,
+          december,
+        ],
+        quarterly: [
+          "" + addAllValues(january, february, march),
+          "" + addAllValues(april, may, june),
+          "" + addAllValues(july, august, september),
+          "" + addAllValues(october, november, december),
+        ],
         total: parseFloat(total.toFixed(2)),
       });
     }
@@ -253,23 +269,26 @@ const extractAndFilterData = (data, teamParam) => {
         profileImg,
         team,
         weekly: salesData,
-        monthly: {
-          "1": january,
-          "2": february,
-          "3": march,
-          "4": april,
-          "5": may,
-          "6": june,
-          "7": july,
-          "8": august,
-          "9": september,
-          "10": october,
-          "11": november,
-          "12": december,
-        },
-        quarterly: {
-
-        },
+        monthly: [
+          january,
+          february,
+          march,
+          april,
+          may,
+          june,
+          july,
+          august,
+          september,
+          october,
+          november,
+          december,
+        ],
+        quarterly: [
+          convertToStrMoney("£", addAllValues(january, february, march)),
+          convertToStrMoney("£", addAllValues(april, may, june)),
+          convertToStrMoney("£", addAllValues(july, august, september)),
+          convertToStrMoney("£", addAllValues(october, november, december)),
+        ],
         total: parseFloat(total.toFixed(2)),
       });
     }
