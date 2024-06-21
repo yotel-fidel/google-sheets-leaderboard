@@ -67,13 +67,13 @@ const SalesTeamPage = ({ params }) => {
   const [bookedMDSData, setBookedMDSData] = useState(null);
   const [satDemsData, setSatDemsData] = useState(null);
   const [satMDSData, setSatMDSData] = useState(null);
-  const [salesSDRData, setSalesSDRData] = useState([]);
+  const [salesSDRData, setSalesSDRData] = useState(null);
 
   const [sortedBookedDemsData, setSortedBookedDemsData] = useState(null);
   const [sortedBookedMDSData, setSortedBookedMDSData] = useState(null);
   const [sortedSatDemsData, setSortedSatDemsData] = useState(null);
   const [sortedSatMDSData, setSortedSatMDSData] = useState(null);
-  const [sortedSalesSDRData, setSortedSalesSDRData] = useState([]);
+  const [sortedSalesSDRData, setSortedSalesSDRData] = useState(null);
 
   const [loading, setLoading] = useState(true);
 
@@ -147,7 +147,7 @@ const SalesTeamPage = ({ params }) => {
                   <CommandList>
                     <CommandEmpty>No option found.</CommandEmpty>
                     <CommandGroup className="max-h-[200px] overflow-y-auto">
-                      {DATA_OPTION_LIST.map((dataOptionItem) => (
+                      {bookedDemsData && DATA_OPTION_LIST.map((dataOptionItem) => (
                         <CommandItem
                           key={dataOptionItem.value}
                           value={dataOptionItem.value}
