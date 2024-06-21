@@ -134,7 +134,10 @@ export function formatLargeCurrency(value) {
     const money = value.substring(1).replace(/,/g, '');
 
     if (parseFloat(money) >= 1000) {
-        return `${removedCurrency}${(parseFloat(money) / 1000).toFixed(1)}k`;
+        const numericValue = parseFloat(money);
+        const formattedValue = Math.floor(numericValue / 1000 * 10) / 10; // Round down to 1 decimal place
+        return `${removedCurrency}${formattedValue}k`;
+        // return `${removedCurrency}${(parseFloat(money) / 1000).toFixed(2)}k`;
     }
     return `${removedCurrency}${money}`;
 };
