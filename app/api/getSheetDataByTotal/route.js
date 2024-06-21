@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { google } from 'googleapis';
-import { getCurrentWeekAndYear } from '@/app/_utils';
+import { getCurrentWeekAndYear, addAllValues, convertToStrMoney } from '@/app/_utils';
 
 export async function GET() {
   const { currentYear } = getCurrentWeekAndYear();
@@ -113,23 +113,26 @@ const extractData = (data) => {
       profileImg,
       team,
       weekly: salesData,
-      monthly: {
-        "1": january,
-        "2": february,
-        "3": march,
-        "4": april,
-        "5": may,
-        "6": june,
-        "7": july,
-        "8": august,
-        "9": september,
-        "10": october,
-        "11": november,
-        "12": december,
-      },
-      quarterly: {
-
-      },
+      monthly: [
+        january,
+        february,
+        march,
+        april,
+        may,
+        june,
+        july,
+        august,
+        september,
+        october,
+        november,
+        december,
+      ],
+      quarterly: [
+        "" + addAllValues(january, february, march),
+        "" + addAllValues(april, may, june),
+        "" + addAllValues(july, august, september),
+        "" + addAllValues(october, november, december),
+      ],
       sales: salesData,
       total: parseFloat(total.toFixed(2)),
     });
@@ -146,23 +149,26 @@ const extractData = (data) => {
       profileImg,
       team,
       weekly: salesData,
-      monthly: {
-        "1": january,
-        "2": february,
-        "3": march,
-        "4": april,
-        "5": may,
-        "6": june,
-        "7": july,
-        "8": august,
-        "9": september,
-        "10": october,
-        "11": november,
-        "12": december,
-      },
-      quarterly: {
-
-      },
+      monthly: [
+        january,
+        february,
+        march,
+        april,
+        may,
+        june,
+        july,
+        august,
+        september,
+        october,
+        november,
+        december,
+      ],
+      quarterly: [
+        "" + addAllValues(january, february, march),
+        "" + addAllValues(april, may, june),
+        "" + addAllValues(july, august, september),
+        "" + addAllValues(october, november, december),
+      ],
       total: parseFloat(total.toFixed(2)),
     });
   }
@@ -178,23 +184,26 @@ const extractData = (data) => {
       profileImg,
       team,
       weekly: salesData,
-      monthly: {
-        "1": january,
-        "2": february,
-        "3": march,
-        "4": april,
-        "5": may,
-        "6": june,
-        "7": july,
-        "8": august,
-        "9": september,
-        "10": october,
-        "11": november,
-        "12": december,
-      },
-      quarterly: {
-
-      },
+      monthly: [
+        january,
+        february,
+        march,
+        april,
+        may,
+        june,
+        july,
+        august,
+        september,
+        october,
+        november,
+        december,
+      ],
+      quarterly: [
+        "" + addAllValues(january, february, march),
+        "" + addAllValues(april, may, june),
+        "" + addAllValues(july, august, september),
+        "" + addAllValues(october, november, december),
+      ],
       total: parseFloat(total.toFixed(2)),
     });
   }
@@ -210,23 +219,26 @@ const extractData = (data) => {
       profileImg,
       team,
       weekly: salesData,
-      monthly: {
-        "1": january,
-        "2": february,
-        "3": march,
-        "4": april,
-        "5": may,
-        "6": june,
-        "7": july,
-        "8": august,
-        "9": september,
-        "10": october,
-        "11": november,
-        "12": december,
-      },
-      quarterly: {
-
-      },
+      monthly: [
+        january,
+        february,
+        march,
+        april,
+        may,
+        june,
+        july,
+        august,
+        september,
+        october,
+        november,
+        december,
+      ],
+      quarterly: [
+        "" + addAllValues(january, february, march),
+        "" + addAllValues(april, may, june),
+        "" + addAllValues(july, august, september),
+        "" + addAllValues(october, november, december),
+      ],
       total: parseFloat(total.toFixed(2)),
     });
   }
@@ -245,23 +257,26 @@ const extractData = (data) => {
       profileImg,
       team,
       weekly: salesData,
-      monthly: {
-        "1": january,
-        "2": february,
-        "3": march,
-        "4": april,
-        "5": may,
-        "6": june,
-        "7": july,
-        "8": august,
-        "9": september,
-        "10": october,
-        "11": november,
-        "12": december,
-      },
-      quarterly: {
-
-      },
+      monthly: [
+        january,
+        february,
+        march,
+        april,
+        may,
+        june,
+        july,
+        august,
+        september,
+        october,
+        november,
+        december,
+      ],
+      quarterly: [
+        convertToStrMoney("£", addAllValues(january, february, march)),
+        convertToStrMoney("£", addAllValues(april, may, june)),
+        convertToStrMoney("£", addAllValues(july, august, september)),
+        convertToStrMoney("£", addAllValues(october, november, december)),
+      ],
       total: parseFloat(total.toFixed(2)),
     });
   }
