@@ -7,6 +7,7 @@ import Loading from './Loading';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import RankingCard from '@/app/components/RankingCard';
 import AwardPodium from '@/app/components/AwardPodium';
+import TotalScoreOrCurrencyCard from '@/app/components/TotalScoreOrCurrencyCard';
 import { PERIOD_LIST, DATA_OPTION_LIST } from '@/lib/constants';
 
 import { Check, ChevronsUpDown } from "lucide-react"
@@ -39,6 +40,8 @@ const Leaderboard = () => {
   const [sortedSatMDSData, setSortedSatMDSData] = useState(null);
   const [sortedSalesSDRData, setSortedSalesSDRData] = useState(null);
 
+  const [totalData, setTotalData] = useState(null);
+
   const [loading, setLoading] = useState(true);
 
   const [open, setOpen] = useState(false)
@@ -68,6 +71,8 @@ const Leaderboard = () => {
         setSortedSatDemsData(sortDataBasedOnPeriod(data.satDemsData, PERIOD_LIST.WEEKLY, currentWeekNumber));
         setSortedSatMDSData(sortDataBasedOnPeriod(data.satMDSData, PERIOD_LIST.WEEKLY, currentWeekNumber));
         setSortedSalesSDRData(sortDataBasedOnPeriod(data.salesSDRData, PERIOD_LIST.WEEKLY, currentWeekNumber, true));
+
+        setTotalData(data.total)
 
         setLoading(false);
 
@@ -168,8 +173,11 @@ const Leaderboard = () => {
           </div>)}
           {sortedBookedDemsData && (
             <div className='flex flex-wrap flex-col lg:flex-row lg:items-center'>
-              <AwardPodium first={sortedBookedDemsData[0]} second={sortedBookedDemsData[1]} third={sortedBookedDemsData[2]} periodObject={timePeriod} className='self-center lg:self-start md:flex-1 w-full md:min-w-[500px]' />
-              <div className='md:flex-[2_2_0%] grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4'>
+              <div className='self-center lg:self-start'>
+                <AwardPodium first={sortedBookedDemsData[0]} second={sortedBookedDemsData[1]} third={sortedBookedDemsData[2]} periodObject={timePeriod} className='md:flex-1 w-full md:min-w-[500px]' />
+                <TotalScoreOrCurrencyCard data={totalData.salesBookedDems} timePeriod={timePeriod} isCurrency={false} />
+              </div>
+              <div className='self-center lg:self-start md:flex-[2_2_0%] grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4'>
                 {sortedBookedDemsData.map((info, index) => {
                   if (index >= 3) {
                     return (
@@ -189,8 +197,11 @@ const Leaderboard = () => {
           </div>)}
           {sortedBookedMDSData && (
             <div className='flex flex-wrap flex-col lg:flex-row lg:items-center'>
-              <AwardPodium first={sortedBookedMDSData[0]} second={sortedBookedMDSData[1]} third={sortedBookedMDSData[2]} periodObject={timePeriod} className='self-center lg:self-start md:flex-1 w-full md:min-w-[500px]' />
-              <div className='md:flex-[2_2_0%] grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4'>
+              <div className='self-center lg:self-start'>
+                <AwardPodium first={sortedBookedMDSData[0]} second={sortedBookedMDSData[1]} third={sortedBookedMDSData[2]} periodObject={timePeriod} className='md:flex-1 w-full md:min-w-[500px]' />
+                <TotalScoreOrCurrencyCard data={totalData.salesBookedMDS} timePeriod={timePeriod} isCurrency={false} />
+              </div>
+              <div className='self-center lg:self-start md:flex-[2_2_0%] grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4'>
                 {sortedBookedMDSData.map((info, index) => {
                   if (index >= 3) {
                     return (
@@ -210,8 +221,11 @@ const Leaderboard = () => {
           </div>)}
           {sortedSatDemsData && (
             <div className='flex flex-wrap flex-col lg:flex-row lg:items-center'>
-              <AwardPodium first={sortedSatDemsData[0]} second={sortedSatDemsData[1]} third={sortedSatDemsData[2]} periodObject={timePeriod} className='self-center lg:self-start md:flex-1 w-full md:min-w-[500px]' />
-              <div className='md:flex-[2_2_0%] grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4'>
+              <div className='self-center lg:self-start'>
+                <AwardPodium first={sortedSatDemsData[0]} second={sortedSatDemsData[1]} third={sortedSatDemsData[2]} periodObject={timePeriod} className='md:flex-1 w-full md:min-w-[500px]' />
+                <TotalScoreOrCurrencyCard data={totalData.salesSatDems} timePeriod={timePeriod} isCurrency={false} />
+              </div>
+              <div className='self-center lg:self-start md:flex-[2_2_0%] grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4'>
                 {sortedSatDemsData.map((info, index) => {
                   if (index >= 3) {
                     return (
@@ -231,8 +245,11 @@ const Leaderboard = () => {
           </div>)}
           {sortedSatMDSData && (
             <div className='flex flex-wrap flex-col lg:flex-row lg:items-center'>
-              <AwardPodium first={sortedSatMDSData[0]} second={sortedSatMDSData[1]} third={sortedSatMDSData[2]} periodObject={timePeriod} className='self-center lg:self-start md:flex-1 w-full md:min-w-[500px]' />
-              <div className='md:flex-[2_2_0%] grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4'>
+              <div className='self-center lg:self-start'>
+                <AwardPodium first={sortedSatMDSData[0]} second={sortedSatMDSData[1]} third={sortedSatMDSData[2]} periodObject={timePeriod} className='md:flex-1 w-full md:min-w-[500px]' />
+                <TotalScoreOrCurrencyCard data={totalData.salesSatMDS} timePeriod={timePeriod} isCurrency={false} />
+              </div>
+              <div className='self-center lg:self-start md:flex-[2_2_0%] grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4'>
                 {sortedSatMDSData.map((info, index) => {
                   if (index >= 3) {
                     return (
@@ -252,8 +269,11 @@ const Leaderboard = () => {
           </div>)}
           {sortedSalesSDRData && (
             <div className='flex flex-wrap flex-col lg:flex-row lg:items-center'>
-              <AwardPodium first={sortedSalesSDRData[0]} second={sortedSalesSDRData[1]} third={sortedSalesSDRData[2]} isCurrency={true} periodObject={timePeriod} className='self-center lg:self-start md:flex-1 w-full md:min-w-[500px]' />
-              <div className='md:flex-[2_2_0%] grid grid-cols-1 xl:grid-cols-2 gap-4'>
+              <div className='self-center lg:self-start'>
+                <AwardPodium first={sortedSalesSDRData[0]} second={sortedSalesSDRData[1]} third={sortedSalesSDRData[2]} isCurrency={true} periodObject={timePeriod} className='md:flex-1 w-full md:min-w-[500px]' />
+                <TotalScoreOrCurrencyCard data={totalData.salesSDR} timePeriod={timePeriod} isCurrency={true} />
+              </div>
+              <div className='self-center lg:self-start md:flex-[2_2_0%] grid grid-cols-1 xl:grid-cols-2 gap-4'>
                 {sortedSalesSDRData.map((info, index) => {
                   if (index >= 3) {
                     return (
