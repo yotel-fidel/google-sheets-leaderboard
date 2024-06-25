@@ -150,7 +150,7 @@ const extractAndFilterData = (data, teamParam) => {
         quarterly: [
           "" + quarter1,
           "" + quarter2,
-          "" + quarter4,
+          "" + quarter3,
           "" + quarter4,
         ],
         total: parseFloat(total.toFixed(2)),
@@ -220,7 +220,7 @@ const extractAndFilterData = (data, teamParam) => {
         quarterly: [
           "" + quarter1,
           "" + quarter2,
-          "" + quarter4,
+          "" + quarter3,
           "" + quarter4,
         ],
         total: parseFloat(total.toFixed(2)),
@@ -242,7 +242,6 @@ const extractAndFilterData = (data, teamParam) => {
       ];
       quarters.forEach((quarterSales, index) => {
         salesBookedMDSTotal.quarterly[index] += isNaN(Number(quarterSales)) ? 0 : Number(quarterSales);
-
       });
     }
   }
@@ -289,7 +288,7 @@ const extractAndFilterData = (data, teamParam) => {
         quarterly: [
           "" + quarter1,
           "" + quarter2,
-          "" + quarter4,
+          "" + quarter3,
           "" + quarter4,
         ],
         total: parseFloat(total.toFixed(2)),
@@ -357,7 +356,7 @@ const extractAndFilterData = (data, teamParam) => {
         quarterly: [
           "" + quarter1,
           "" + quarter2,
-          "" + quarter4,
+          "" + quarter3,
           "" + quarter4,
         ],
         total: parseFloat(total.toFixed(2)),
