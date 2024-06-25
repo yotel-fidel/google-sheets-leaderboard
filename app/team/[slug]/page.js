@@ -194,13 +194,19 @@ const SalesTeamPage = ({ params }) => {
               </PopoverContent>
             </Popover>
           </div>
-          {bookedDemsData && (<div>
-            <h1 className="text-2xl text-black font-bold text-center">{bookedDemsData[0] && bookedDemsData[0].team}</h1>
-            <p className='text-black text-center mb-6'>{timePeriod && getDateRange(timePeriod.period, timePeriod.number, currentYear)}</p>
-          </div>)}
+
         </div>
         <TabsContent value="bookedDems" className="w-full">
-          <h1 className="text-2xl text-black font-bold text-center mb-6">Booked Dems</h1>
+          <div className='flex flex-col sm:flex-row flex-wrap justify-between gap-2 bg-[#9e0000] rounded-sm p-2 my-2'>
+            <div>
+              <h2 className="text-2xl text-white font-bold">Booked Dems</h2>
+              {totalData && <TotalScoreOrCurrencyCard data={totalData.salesBookedDems} timePeriod={timePeriod} isCurrency={false} className="!p-0" />}
+            </div>
+            <div>
+              <h2 className="text-2xl text-white font-bold text-left sm:text-right">{bookedDemsData && bookedDemsData[0] && bookedDemsData[0].team}</h2>
+              <h2 className='text-white'>{timePeriod && getDateRange(timePeriod.period, timePeriod.number, currentYear)}</h2>
+            </div>
+          </div>
           {loading && (<div className="flex justify-center w-full">
             <Loading />
           </div>)}
@@ -208,7 +214,6 @@ const SalesTeamPage = ({ params }) => {
             <div className='flex flex-wrap flex-col lg:flex-row lg:items-center'>
               <div className='self-center lg:self-start'>
                 <AwardPodium first={sortedBookedDemsData[0]} second={sortedBookedDemsData[1]} third={sortedBookedDemsData[2]} periodObject={timePeriod} className='md:flex-1 w-full md:min-w-[500px]' />
-                <TotalScoreOrCurrencyCard data={totalData.salesBookedDems} timePeriod={timePeriod} isCurrency={false} />
               </div>
               <div className='self-center lg:self-start md:flex-[2_2_0%] grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4'>
                 {sortedBookedDemsData.map((info, index) => {
@@ -224,7 +229,16 @@ const SalesTeamPage = ({ params }) => {
           )}
         </TabsContent>
         <TabsContent value="bookedMDS">
-          <h1 className="text-2xl text-black font-bold text-center mb-6">Booked MDS</h1>
+          <div className='flex flex-col sm:flex-row flex-wrap justify-between gap-2 bg-[#9e0000] rounded-sm p-2 my-2'>
+            <div>
+              <h2 className="text-2xl text-white font-bold">Booked MDS</h2>
+              {totalData && <TotalScoreOrCurrencyCard data={totalData.salesBookedMDS} timePeriod={timePeriod} isCurrency={false} className="!p-0" />}
+            </div>
+            <div>
+              <h2 className="text-2xl text-white font-bold text-left sm:text-right">{bookedDemsData && bookedDemsData[0] && bookedDemsData[0].team}</h2>
+              <h2 className='text-white'>{timePeriod && getDateRange(timePeriod.period, timePeriod.number, currentYear)}</h2>
+            </div>
+          </div>
           {loading && (<div className="flex justify-center w-full">
             <Loading />
           </div>)}
@@ -232,7 +246,6 @@ const SalesTeamPage = ({ params }) => {
             <div className='flex flex-wrap flex-col lg:flex-row lg:items-center'>
               <div className='self-center lg:self-start'>
                 <AwardPodium first={sortedBookedMDSData[0]} second={sortedBookedMDSData[1]} third={sortedBookedMDSData[2]} periodObject={timePeriod} className='md:flex-1 w-full md:min-w-[500px]' />
-                <TotalScoreOrCurrencyCard data={totalData.salesBookedMDS} timePeriod={timePeriod} isCurrency={false} />
               </div>
               <div className='self-center lg:self-start md:flex-[2_2_0%] grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4'>
                 {sortedBookedMDSData.map((info, index) => {
@@ -248,7 +261,16 @@ const SalesTeamPage = ({ params }) => {
           )}
         </TabsContent>
         <TabsContent value="satDems">
-          <h1 className="text-2xl text-black font-bold text-center mb-6">Sat Dems</h1>
+          <div className='flex flex-col sm:flex-row flex-wrap justify-between gap-2 bg-[#9e0000] rounded-sm p-2 my-2'>
+            <div>
+              <h2 className="text-2xl text-white font-bold">Sat Dems</h2>
+              {totalData && <TotalScoreOrCurrencyCard data={totalData.salesSatDems} timePeriod={timePeriod} isCurrency={false} className="!p-0" />}
+            </div>
+            <div>
+              <h2 className="text-2xl text-white font-bold text-left sm:text-right">{bookedDemsData && bookedDemsData[0] && bookedDemsData[0].team}</h2>
+              <h2 className='text-white'>{timePeriod && getDateRange(timePeriod.period, timePeriod.number, currentYear)}</h2>
+            </div>
+          </div>
           {loading && (<div className="flex justify-center w-full">
             <Loading />
           </div>)}
@@ -256,7 +278,6 @@ const SalesTeamPage = ({ params }) => {
             <div className='flex flex-wrap flex-col lg:flex-row lg:items-center'>
               <div className='self-center lg:self-start'>
                 <AwardPodium first={sortedSatDemsData[0]} second={sortedSatDemsData[1]} third={sortedSatDemsData[2]} periodObject={timePeriod} className='md:flex-1 w-full md:min-w-[500px]' />
-                <TotalScoreOrCurrencyCard data={totalData.salesSatDems} timePeriod={timePeriod} isCurrency={false} />
               </div>
               <div className='self-center lg:self-start md:flex-[2_2_0%] grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4'>
                 {sortedSatDemsData.map((info, index) => {
@@ -272,7 +293,16 @@ const SalesTeamPage = ({ params }) => {
           )}
         </TabsContent>
         <TabsContent value="satMDS">
-          <h1 className="text-2xl text-black font-bold text-center mb-6">Sat MDS</h1>
+          <div className='flex flex-col sm:flex-row flex-wrap justify-between gap-2 bg-[#9e0000] rounded-sm p-2 my-2'>
+            <div>
+              <h2 className="text-2xl text-white font-bold">Sat MDS</h2>
+              {totalData && <TotalScoreOrCurrencyCard data={totalData.salesSatMDS} timePeriod={timePeriod} isCurrency={false} className="!p-0" />}
+            </div>
+            <div>
+              <h2 className="text-2xl text-white font-bold text-left sm:text-right">{bookedDemsData && bookedDemsData[0] && bookedDemsData[0].team}</h2>
+              <h2 className='text-white'>{timePeriod && getDateRange(timePeriod.period, timePeriod.number, currentYear)}</h2>
+            </div>
+          </div>
           {loading && (<div className="flex justify-center w-full">
             <Loading />
           </div>)}
@@ -280,7 +310,6 @@ const SalesTeamPage = ({ params }) => {
             <div className='flex flex-wrap flex-col lg:flex-row lg:items-center'>
               <div className='self-center lg:self-start'>
                 <AwardPodium first={sortedSatMDSData[0]} second={sortedSatMDSData[1]} third={sortedSatMDSData[2]} periodObject={timePeriod} className='md:flex-1 w-full md:min-w-[500px]' />
-                <TotalScoreOrCurrencyCard data={totalData.salesSatMDS} timePeriod={timePeriod} isCurrency={false} />
               </div>
               <div className='self-center lg:self-start md:flex-[2_2_0%] grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4'>
                 {sortedSatMDSData.map((info, index) => {
@@ -296,7 +325,16 @@ const SalesTeamPage = ({ params }) => {
           )}
         </TabsContent>
         <TabsContent value="salesSDR">
-          <h1 className="text-2xl text-black font-bold text-center mb-6">Sales</h1>
+          <div className='flex flex-col sm:flex-row flex-wrap justify-between gap-2 bg-[#9e0000] rounded-sm p-2 my-2'>
+            <div>
+              <h2 className="text-2xl text-white font-bold">Sales</h2>
+              {totalData && <TotalScoreOrCurrencyCard data={totalData.salesSDR} timePeriod={timePeriod} isCurrency={false} className="!p-0" />}
+            </div>
+            <div>
+              <h2 className="text-2xl text-white font-bold text-left sm:text-right">{bookedDemsData && bookedDemsData[0] && bookedDemsData[0].team}</h2>
+              <h2 className='text-white'>{timePeriod && getDateRange(timePeriod.period, timePeriod.number, currentYear)}</h2>
+            </div>
+          </div>
           {loading && (<div className="flex justify-center w-full">
             <Loading />
           </div>)}
@@ -304,7 +342,6 @@ const SalesTeamPage = ({ params }) => {
             <div className='flex flex-wrap flex-col lg:flex-row lg:items-center'>
               <div className='self-center lg:self-start'>
                 <AwardPodium first={sortedSalesSDRData[0]} second={sortedSalesSDRData[1]} third={sortedSalesSDRData[2]} isCurrency={true} periodObject={timePeriod} className='md:flex-1 w-full md:min-w-[500px]' />
-                <TotalScoreOrCurrencyCard data={totalData.salesSDR} timePeriod={timePeriod} isCurrency={true} />
               </div>
               <div className='self-center lg:self-start md:flex-[2_2_0%] grid grid-cols-1 xl:grid-cols-2 gap-4'>
                 {sortedSalesSDRData.map((info, index) => {
