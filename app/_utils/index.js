@@ -130,28 +130,52 @@ export function parsePeriodString(periodString) {
 }
 
 export function formatLargeCurrency(value) {
-    const removedCurrency = value[0];
-    const money = value.substring(1).replace(/,/g, '');
+    const currencySymbols = ['$', '£', '€'];
+    let removedCurrency = '£';
+    let money = value;
 
-    if (parseFloat(money) >= 1000) {
-        const numericValue = parseFloat(money);
+    if (currencySymbols.includes(value[0])) {
+        removedCurrency = value[0];
+        money = value.substring(1).replace(/,/g, '');
+    }
+
+    let numericValue = parseFloat(money);
+
+    if (isNaN(numericValue)) {
+        numericValue = 0;
+    }
+
+    if (numericValue >= 1000) {
         const formattedValue = Math.floor(numericValue / 1000 * 10) / 10; // Round down to 1 decimal place
         return `${removedCurrency}${formattedValue}k`;
-        // return `${removedCurrency}${(parseFloat(money) / 1000).toFixed(2)}k`;
     }
-    return `${removedCurrency}${money}`;
+    // Ensure the number is always rounded down to two decimal places
+    const roundedDownValue = Math.floor(numericValue * 100) / 100;
+    return `${removedCurrency}${roundedDownValue.toFixed(2)}`;
 };
 
 export function getCurrencyOrScore(data, periodObject, isCurrency) {
-    console.log("PERIOOD:", periodObject.period)
+    // console.log("PERIOOD:", periodObject.period)
     switch (periodObject.period.toLowerCase()) {
         case PERIOD_LIST.WEEKLY.toLowerCase():
             return isCurrency ? formatLargeCurrency(data.weekly[periodObject.number - 1]) : data.weekly[periodObject.number - 1];
         case PERIOD_LIST.QUARTERLY.toLowerCase():
-            // NO MINUS 1 AS IT IS CALLING AN OBJECT
             return isCurrency ? formatLargeCurrency(data.quarterly[periodObject.number - 1]) : data.quarterly[periodObject.number - 1];
         case PERIOD_LIST.MONTHLY.toLowerCase():
-            // NO MINUS 1 AS IT IS CALLING AN OBJECT
+            return isCurrency ? formatLargeCurrency(data.monthly[periodObject.number - 1]) : data.monthly[periodObject.number - 1];
+        default:
+            throw new Error("There is something wrong with getting the currency or score data.");
+    }
+}
+
+export function getTotalCurrencyOrScore(data, periodObject, isCurrency) {
+    // console.log("PERIOOD:", periodObject.period)
+    switch (periodObject.period.toLowerCase()) {
+        case PERIOD_LIST.WEEKLY.toLowerCase():
+            return isCurrency ? formatLargeCurrency(data.weekly[periodObject.number - 1]) : data.weekly[periodObject.number - 1];
+        case PERIOD_LIST.QUARTERLY.toLowerCase():
+            return isCurrency ? formatLargeCurrency(data.quarterly[periodObject.number - 1]) : data.quarterly[periodObject.number - 1];
+        case PERIOD_LIST.MONTHLY.toLowerCase():
             return isCurrency ? formatLargeCurrency(data.monthly[periodObject.number - 1]) : data.monthly[periodObject.number - 1];
         default:
             throw new Error("There is something wrong with getting the currency or score data.");
@@ -200,9 +224,15 @@ export const sortDataBasedOnPeriod = (dataArray, period, periodNumber, isCurrenc
 export function addAllValues(...values) {
     return values.reduce((sum, value) => {
         // Convert value to string and remove commas and currency signs (dollar and pound)
-        let cleanedValue = value.toString().replace(/[£$,]/g, '');
+        let cleanedValue = value.toString().replace(/[$£€,]/g, '');
+        cleanedValue = parseFloat(cleanedValue);
+
+        if (isNaN(cleanedValue)) {
+            cleanedValue = 0;
+        }
+
         // Convert the cleaned value to a number and add to the sum
-        return sum + parseFloat(cleanedValue);
+        return sum + cleanedValue;
     }, 0);
 }
 
