@@ -1,12 +1,12 @@
 import React from 'react'
 import { getTotalCurrencyOrScore } from '@/app/_utils'
 
-const TotalScoreOrCurrencyCard = ({ data, timePeriod, isCurrency }) => {
+const TotalScoreOrCurrencyCard = ({ data, timePeriod, isCurrency, className }) => {
     const total = getTotalCurrencyOrScore(data, timePeriod, isCurrency);
 
     return (
-        <div className="rounded-sm bg-[#9e0000] p-2 w-fit">
-            <span className='text-white'>Total: {total}</span>
+        <div className={`rounded-sm bg-[#9e0000] text-white p-2 w-fit ${className}`}>
+            <span className=''>Total: {total}</span>
         </div>
     );
 }
