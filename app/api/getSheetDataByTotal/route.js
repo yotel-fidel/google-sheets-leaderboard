@@ -36,7 +36,8 @@ export async function GET() {
       bookedMDSData: sortedBookedMDSData,
       satDemsData: sortedSatDemsData,
       satMDSData: sortedSatMDSData,
-      salesSDRData: sortedSalesSDRData
+      salesSDRData: sortedSalesSDRData,
+      total: extractedData.total
     });
   } catch (error) {
     console.error("Error fetching sheets data: ", error);
@@ -55,6 +56,8 @@ const extractData = (data) => {
   let salesSatDems = [];
   let salesSatMDS = [];
   let salesSDR = [];
+
+  let total = {};
 
   let i = 0;
   while (i < data.length) {
@@ -104,10 +107,21 @@ const extractData = (data) => {
 
   let start = salesBookedDemsStart;
   let end = salesBookedDemsEnd;
+  const salesBookedDemsTotal = {
+    weekly: Array.from({ length: 52 }, () => 0),
+    monthly: Array.from({ length: 12 }, () => 0),
+    quarterly: Array.from({ length: 4 }, () => 0),
+  };
   for (; start <= end && start < data.length; start++) {
     const [name, profileImg, team, january, february, march, april, may, june, july, august, september, october, november, december, ...salesData] = data[start]
-    const total = salesData.reduce((sum, weekSales) => sum + Number(weekSales), 0);
-
+    const total = salesData.reduce((sum, weekSales) => {
+      const sales = isNaN(Number(weekSales)) ? 0 : Number(weekSales);
+      return sum + sales;
+    }, 0);
+    const quarter1 = addAllValues(january, february, march);
+    const quarter2 = addAllValues(april, may, june);
+    const quarter3 = addAllValues(july, august, september);
+    const quarter4 = addAllValues(october, november, december);
     salesBookedDems.push({
       name,
       profileImg,
@@ -128,22 +142,55 @@ const extractData = (data) => {
         december,
       ],
       quarterly: [
-        "" + addAllValues(january, february, march),
-        "" + addAllValues(april, may, june),
-        "" + addAllValues(july, august, september),
-        "" + addAllValues(october, november, december),
+        "" + quarter1,
+        "" + quarter2,
+        "" + quarter3,
+        "" + quarter4,
       ],
       sales: salesData,
       total: parseFloat(total.toFixed(2)),
     });
+
+    salesData.forEach((weekSales, index) => {
+      if (index < 52) {
+        salesBookedDemsTotal.weekly[index] += isNaN(Number(weekSales)) ? 0 : Number(weekSales);
+      }
+    });
+
+    // Add to salesBookedDemsTotal.monthly
+    const months = [january, february, march, april, may, june, july, august, september, october, november, december];
+    months.forEach((monthSales, index) => {
+      salesBookedDemsTotal.monthly[index] += isNaN(Number(monthSales)) ? 0 : Number(monthSales);
+    });
+
+    // Add to salesBookedDemsTotal.quarterly
+    const quarters = [
+      quarter1, quarter2, quarter3, quarter4
+    ];
+    quarters.forEach((quarterSales, index) => {
+      salesBookedDemsTotal.quarterly[index] += isNaN(Number(quarterSales)) ? 0 : Number(quarterSales);
+    });
   }
+
+  total.salesBookedDems = salesBookedDemsTotal;
 
   start = salesBookedMDSStart;
   end = salesBookedMDSEnd;
+  const salesBookedMDSTotal = {
+    weekly: Array.from({ length: 52 }, () => 0),
+    monthly: Array.from({ length: 12 }, () => 0),
+    quarterly: Array.from({ length: 4 }, () => 0),
+  };
   for (; start <= end && start < data.length; start++) {
     const [name, profileImg, team, january, february, march, april, may, june, july, august, september, october, november, december, ...salesData] = data[start]
-    const total = salesData.reduce((sum, weekSales) => sum + Number(weekSales), 0);
-
+    const total = salesData.reduce((sum, weekSales) => {
+      const sales = isNaN(Number(weekSales)) ? 0 : Number(weekSales);
+      return sum + sales;
+    }, 0);
+    const quarter1 = addAllValues(january, february, march);
+    const quarter2 = addAllValues(april, may, june);
+    const quarter3 = addAllValues(july, august, september);
+    const quarter4 = addAllValues(october, november, december);
     salesBookedMDS.push({
       name,
       profileImg,
@@ -164,21 +211,53 @@ const extractData = (data) => {
         december,
       ],
       quarterly: [
-        "" + addAllValues(january, february, march),
-        "" + addAllValues(april, may, june),
-        "" + addAllValues(july, august, september),
-        "" + addAllValues(october, november, december),
+        "" + quarter1,
+        "" + quarter2,
+        "" + quarter3,
+        "" + quarter4,
       ],
       total: parseFloat(total.toFixed(2)),
     });
+
+    salesData.forEach((weekSales, index) => {
+      if (index < 52) {
+        salesBookedMDSTotal.weekly[index] += isNaN(Number(weekSales)) ? 0 : Number(weekSales);
+      }
+    });
+
+    const months = [january, february, march, april, may, june, july, august, september, october, november, december];
+    months.forEach((monthSales, index) => {
+      salesBookedMDSTotal.monthly[index] += isNaN(Number(monthSales)) ? 0 : Number(monthSales);
+    });
+
+    const quarters = [
+      quarter1, quarter2, quarter3, quarter4
+    ];
+    quarters.forEach((quarterSales, index) => {
+      salesBookedMDSTotal.quarterly[index] += isNaN(Number(quarterSales)) ? 0 : Number(quarterSales);
+    });
+
   }
+
+  total.salesBookedMDS = salesBookedMDSTotal;
 
   start = salesSatDemsStart;
   end = salesSatDemsEnd;
+  const salesSatDemsTotal = {
+    weekly: Array.from({ length: 52 }, () => 0),
+    monthly: Array.from({ length: 12 }, () => 0),
+    quarterly: Array.from({ length: 4 }, () => 0),
+  };
   for (; start <= end && start < data.length; start++) {
     const [name, profileImg, team, january, february, march, april, may, june, july, august, september, october, november, december, ...salesData] = data[start]
-    const total = salesData.reduce((sum, weekSales) => sum + Number(weekSales), 0);
-
+    const total = salesData.reduce((sum, weekSales) => {
+      const sales = isNaN(Number(weekSales)) ? 0 : Number(weekSales);
+      return sum + sales;
+    }, 0);
+    const quarter1 = addAllValues(january, february, march);
+    const quarter2 = addAllValues(april, may, june);
+    const quarter3 = addAllValues(july, august, september);
+    const quarter4 = addAllValues(october, november, december);
     salesSatDems.push({
       name,
       profileImg,
@@ -199,21 +278,52 @@ const extractData = (data) => {
         december,
       ],
       quarterly: [
-        "" + addAllValues(january, february, march),
-        "" + addAllValues(april, may, june),
-        "" + addAllValues(july, august, september),
-        "" + addAllValues(october, november, december),
+        "" + quarter1,
+        "" + quarter2,
+        "" + quarter3,
+        "" + quarter4,
       ],
       total: parseFloat(total.toFixed(2)),
     });
+
+    salesData.forEach((weekSales, index) => {
+      if (index < 52) {
+        salesSatDemsTotal.weekly[index] += isNaN(Number(weekSales)) ? 0 : Number(weekSales);
+      }
+    });
+
+    const months = [january, february, march, april, may, june, july, august, september, october, november, december];
+    months.forEach((monthSales, index) => {
+      salesSatDemsTotal.monthly[index] += isNaN(Number(monthSales)) ? 0 : Number(monthSales);
+    });
+
+    const quarters = [
+      quarter1, quarter2, quarter3, quarter4
+    ];
+    quarters.forEach((quarterSales, index) => {
+      salesSatDemsTotal.quarterly[index] += isNaN(Number(quarterSales)) ? 0 : Number(quarterSales);
+    });
   }
+
+  total.salesSatDems = salesSatDemsTotal;
 
   start = salesSatMDSStart;
   end = salesSatMDSEnd;
+  const salesSatMDSTotal = {
+    weekly: Array.from({ length: 52 }, () => 0),
+    monthly: Array.from({ length: 12 }, () => 0),
+    quarterly: Array.from({ length: 4 }, () => 0),
+  };
   for (; start <= end && start < data.length; start++) {
     const [name, profileImg, team, january, february, march, april, may, june, july, august, september, october, november, december, ...salesData] = data[start]
-    const total = salesData.reduce((sum, weekSales) => sum + Number(weekSales), 0);
-
+    const total = salesData.reduce((sum, weekSales) => {
+      const sales = isNaN(Number(weekSales)) ? 0 : Number(weekSales);
+      return sum + sales;
+    }, 0);
+    const quarter1 = addAllValues(january, february, march);
+    const quarter2 = addAllValues(april, may, june);
+    const quarter3 = addAllValues(july, august, september);
+    const quarter4 = addAllValues(october, november, december);
     salesSatMDS.push({
       name,
       profileImg,
@@ -234,24 +344,57 @@ const extractData = (data) => {
         december,
       ],
       quarterly: [
-        "" + addAllValues(january, february, march),
-        "" + addAllValues(april, may, june),
-        "" + addAllValues(july, august, september),
-        "" + addAllValues(october, november, december),
+        "" + quarter1,
+        "" + quarter2,
+        "" + quarter3,
+        "" + quarter4,
       ],
       total: parseFloat(total.toFixed(2)),
     });
+
+    salesData.forEach((weekSales, index) => {
+      if (index < 52) {
+        salesSatMDSTotal.weekly[index] += isNaN(Number(weekSales)) ? 0 : Number(weekSales);
+      }
+    });
+
+    const months = [january, february, march, april, may, june, july, august, september, october, november, december];
+    months.forEach((monthSales, index) => {
+      salesSatMDSTotal.monthly[index] += isNaN(Number(monthSales)) ? 0 : Number(monthSales);
+    });
+
+    const quarters = [
+      quarter1, quarter2, quarter3, quarter4
+    ];
+    quarters.forEach((quarterSales, index) => {
+      salesSatMDSTotal.quarterly[index] += isNaN(Number(quarterSales)) ? 0 : Number(quarterSales);
+    });
   }
+
+  total.salesSatMDS = salesSatMDSTotal;
 
   start = salesSDRStart;
   end = salesSDREnd;
+  const salesSDRTotal = {
+    weekly: Array.from({ length: 52 }, () => 0),
+    monthly: Array.from({ length: 12 }, () => 0),
+    quarterly: Array.from({ length: 4 }, () => 0),
+  };
   for (; start <= end && start < data.length; start++) {
     const [name, profileImg, team, january, february, march, april, may, june, july, august, september, october, november, december, ...salesData] = data[start]
     const total = salesData.reduce((sum, weekSales) => {
-      const numericValue = parseFloat(weekSales.substring(1).replace(/,/g, '')); // Remove the first character and convert to number
+      let numericValue = parseFloat(weekSales.toString().replace(/[$£€,]/g, ''));
+
+      if (isNaN(numericValue)) {
+        numericValue = 0;
+      }
+
       return sum + numericValue;
     }, 0);
-
+    const quarter1 = addAllValues(january, february, march);
+    const quarter2 = addAllValues(april, may, june);
+    const quarter3 = addAllValues(july, august, september);
+    const quarter4 = addAllValues(october, november, december);
     salesSDR.push({
       name,
       profileImg,
@@ -272,15 +415,35 @@ const extractData = (data) => {
         december,
       ],
       quarterly: [
-        convertToStrMoney("£", addAllValues(january, february, march)),
-        convertToStrMoney("£", addAllValues(april, may, june)),
-        convertToStrMoney("£", addAllValues(july, august, september)),
-        convertToStrMoney("£", addAllValues(october, november, december)),
+        convertToStrMoney("£", quarter1),
+        convertToStrMoney("£", quarter2),
+        convertToStrMoney("£", quarter3),
+        convertToStrMoney("£", quarter4),
       ],
       total: parseFloat(total.toFixed(2)),
     });
+
+    salesData.forEach((weekSales, index) => {
+      if (index < 52) {
+        salesSDRTotal.weekly[index] += addAllValues(weekSales);
+      }
+    });
+
+    const months = [january, february, march, april, may, june, july, august, september, october, november, december];
+    months.forEach((monthSales, index) => {
+      salesSDRTotal.monthly[index] += addAllValues(monthSales);
+    });
+
+    const quarters = [
+      quarter1, quarter2, quarter3, quarter4
+    ];
+    quarters.forEach((quarterSales, index) => {
+      salesSDRTotal.quarterly[index] += addAllValues(quarterSales);
+    });
   }
 
-  return { salesBookedDems, salesBookedMDS, salesSatDems, salesSatMDS, salesSDR };
+  total.salesSDR = salesSDRTotal;
+
+  return { salesBookedDems, salesBookedMDS, salesSatDems, salesSatMDS, salesSDR, total };
 };
 
