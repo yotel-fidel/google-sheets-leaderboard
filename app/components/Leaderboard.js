@@ -54,7 +54,7 @@ const Leaderboard = () => {
   useEffect(() => {
     const fetchSalesInfo = async () => {
       try {
-        const response = await fetch('/api/getSheetDataByTotal');
+        const response = await fetch('/api/getSheetDataByTotal', { cache: 'no-store' });
         const data = await response.json();
 
         const { currentWeekNumber: thisCurrentWeekNumber, currentYear: thisCurrentYear } = getCurrentWeekAndYear();
@@ -67,7 +67,6 @@ const Leaderboard = () => {
         })
 
         setBookedDemsData(sortDataBasedOnPeriod(data.bookedDemsData, PERIOD_LIST.WEEKLY, thisCurrentWeekNumber));
-        console.log("Booked Dems Data useEffect: ", data.bookedDemsData)
         setBookedMDSData(sortDataBasedOnPeriod(data.bookedMDSData, PERIOD_LIST.WEEKLY, thisCurrentWeekNumber));
         setSatDemsData(sortDataBasedOnPeriod(data.satDemsData, PERIOD_LIST.WEEKLY, thisCurrentWeekNumber));
         setSatMDSData(sortDataBasedOnPeriod(data.satMDSData, PERIOD_LIST.WEEKLY, thisCurrentWeekNumber));
