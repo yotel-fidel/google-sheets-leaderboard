@@ -1,5 +1,3 @@
-"use client"
-
 import SalesInfo from './components/SalesInfo';
 import Leaderboard from './components/Leaderboard';
 

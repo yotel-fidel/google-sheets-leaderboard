@@ -27,8 +27,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
-export const revalidate = 0;
-
 const Leaderboard = () => {
   const [bookedDemsData, setBookedDemsData] = useState(null);
   const [bookedMDSData, setBookedMDSData] = useState(null);
