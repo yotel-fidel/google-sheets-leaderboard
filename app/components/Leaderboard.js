@@ -54,7 +54,7 @@ const Leaderboard = () => {
   useEffect(() => {
     const fetchSalesInfo = async () => {
       try {
-        const response = await fetch('/api/getSheetDataByTotal');
+        const response = await fetch('/api/getSheetDataByTotal', { cache: 'no-store' });
         const data = await response.json();
 
         const { currentWeekNumber: thisCurrentWeekNumber, currentYear: thisCurrentYear } = getCurrentWeekAndYear();
