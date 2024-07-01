@@ -47,12 +47,9 @@ const Leaderboard = () => {
   const [open, setOpen] = useState(false)
   const [value, setValue] = useState("")
 
-  const { currentWeekNumber, currentYear } = getCurrentWeekAndYear();
-  const [timePeriod, setTimePeriod] = useState({
-    period: PERIOD_LIST.WEEKLY.toLowerCase(),
-    number: currentWeekNumber
-  });
-
+  const [currentWeekNumber, setCurrentWeekNumber] = useState(null);
+  const [currentYear, setCurrentYear] = useState(null);
+  const [timePeriod, setTimePeriod] = useState(null);
 
   useEffect(() => {
     const fetchSalesInfo = async () => {
@@ -60,17 +57,26 @@ const Leaderboard = () => {
         const response = await fetch('/api/getSheetDataByTotal');
         const data = await response.json();
 
-        setBookedDemsData(sortDataBasedOnPeriod(data.bookedDemsData, PERIOD_LIST.WEEKLY, currentWeekNumber));
-        setBookedMDSData(sortDataBasedOnPeriod(data.bookedMDSData, PERIOD_LIST.WEEKLY, currentWeekNumber));
-        setSatDemsData(sortDataBasedOnPeriod(data.satDemsData, PERIOD_LIST.WEEKLY, currentWeekNumber));
-        setSatMDSData(sortDataBasedOnPeriod(data.satMDSData, PERIOD_LIST.WEEKLY, currentWeekNumber));
-        setSalesSDRData(sortDataBasedOnPeriod(data.salesSDRData, PERIOD_LIST.WEEKLY, currentWeekNumber, true));
+        const { currentWeekNumber: thisCurrentWeekNumber, currentYear: thisCurrentYear } = getCurrentWeekAndYear();
+        setCurrentWeekNumber(thisCurrentWeekNumber);
+        setCurrentYear(thisCurrentYear);
 
-        setSortedBookedDemsData(sortDataBasedOnPeriod(data.bookedDemsData, PERIOD_LIST.WEEKLY, currentWeekNumber));
-        setSortedBookedMDSData(sortDataBasedOnPeriod(data.bookedMDSData, PERIOD_LIST.WEEKLY, currentWeekNumber));
-        setSortedSatDemsData(sortDataBasedOnPeriod(data.satDemsData, PERIOD_LIST.WEEKLY, currentWeekNumber));
-        setSortedSatMDSData(sortDataBasedOnPeriod(data.satMDSData, PERIOD_LIST.WEEKLY, currentWeekNumber));
-        setSortedSalesSDRData(sortDataBasedOnPeriod(data.salesSDRData, PERIOD_LIST.WEEKLY, currentWeekNumber, true));
+        setTimePeriod({
+          period: PERIOD_LIST.WEEKLY.toLowerCase(),
+          number: thisCurrentWeekNumber
+        })
+
+        setBookedDemsData(sortDataBasedOnPeriod(data.bookedDemsData, PERIOD_LIST.WEEKLY, thisCurrentWeekNumber));
+        setBookedMDSData(sortDataBasedOnPeriod(data.bookedMDSData, PERIOD_LIST.WEEKLY, thisCurrentWeekNumber));
+        setSatDemsData(sortDataBasedOnPeriod(data.satDemsData, PERIOD_LIST.WEEKLY, thisCurrentWeekNumber));
+        setSatMDSData(sortDataBasedOnPeriod(data.satMDSData, PERIOD_LIST.WEEKLY, thisCurrentWeekNumber));
+        setSalesSDRData(sortDataBasedOnPeriod(data.salesSDRData, PERIOD_LIST.WEEKLY, thisCurrentWeekNumber, true));
+
+        setSortedBookedDemsData(sortDataBasedOnPeriod(data.bookedDemsData, PERIOD_LIST.WEEKLY, thisCurrentWeekNumber));
+        setSortedBookedMDSData(sortDataBasedOnPeriod(data.bookedMDSData, PERIOD_LIST.WEEKLY, thisCurrentWeekNumber));
+        setSortedSatDemsData(sortDataBasedOnPeriod(data.satDemsData, PERIOD_LIST.WEEKLY, thisCurrentWeekNumber));
+        setSortedSatMDSData(sortDataBasedOnPeriod(data.satMDSData, PERIOD_LIST.WEEKLY, thisCurrentWeekNumber));
+        setSortedSalesSDRData(sortDataBasedOnPeriod(data.salesSDRData, PERIOD_LIST.WEEKLY, thisCurrentWeekNumber, true));
 
         setTotalData(data.total)
 
