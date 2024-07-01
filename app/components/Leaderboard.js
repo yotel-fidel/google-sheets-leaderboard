@@ -67,6 +67,7 @@ const Leaderboard = () => {
         })
 
         setBookedDemsData(sortDataBasedOnPeriod(data.bookedDemsData, PERIOD_LIST.WEEKLY, thisCurrentWeekNumber));
+        console.log("Booked Dems Data useEffect: ", data.bookedDemsData)
         setBookedMDSData(sortDataBasedOnPeriod(data.bookedMDSData, PERIOD_LIST.WEEKLY, thisCurrentWeekNumber));
         setSatDemsData(sortDataBasedOnPeriod(data.satDemsData, PERIOD_LIST.WEEKLY, thisCurrentWeekNumber));
         setSatMDSData(sortDataBasedOnPeriod(data.satMDSData, PERIOD_LIST.WEEKLY, thisCurrentWeekNumber));
