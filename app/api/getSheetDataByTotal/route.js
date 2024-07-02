@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { google } from 'googleapis';
 import { getCurrentWeekAndYear, addAllValues, convertToStrMoney } from '@/app/_utils';
 
+// Forces the page or component to be rendered dynamically. 
+// This means that the content will be generated on each request rather than being statically generated at build time.
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
