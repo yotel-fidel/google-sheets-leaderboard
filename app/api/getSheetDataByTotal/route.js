@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { google } from 'googleapis';
 import { getCurrentWeekAndYear, addAllValues, convertToStrMoney } from '@/app/_utils';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   const { currentYear } = getCurrentWeekAndYear();
   const auth = new google.auth.GoogleAuth({
