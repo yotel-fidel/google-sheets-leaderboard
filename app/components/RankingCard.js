@@ -58,7 +58,7 @@ export default function RankingCard({ info, targetSalesData, index, periodObject
                         </div>
                     </div>
                     {(!isCurrency || (targetSalesData && periodObject.period === PERIOD_LIST.WEEKLY.toLowerCase())) && (
-                        <div className="booking-number text-xl font-semibold text-blue-600">
+                        <div className="booking-number text-xl font-semibold text-[#9e0000]">
                             {info && getCurrencyOrScore(info, periodObject, isCurrency)}
                         </div>
                     )}
@@ -71,7 +71,7 @@ export default function RankingCard({ info, targetSalesData, index, periodObject
 
                     return (
                         <div key={index} className='mt-2'>
-                            <p className='text-[16px] font-semibold text-blue-600'>Target Profit: {convertToStrMoney('£', infoValue)}/{convertToStrMoney('£', filteredDataValue)}</p>
+                            <p className='text-[16px] font-semibold text-[#9e0000]'>Target Profit: {convertToStrMoney('£', infoValue)}/{convertToStrMoney('£', filteredDataValue)}</p>
                             <ProgressBar progressPercentage={progressPercentage} />
                         </div>
                     )
