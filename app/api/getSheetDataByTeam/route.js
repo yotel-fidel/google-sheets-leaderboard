@@ -42,6 +42,7 @@ export async function GET(request) {
       satDemsData: sortedSatDemsData,
       satMDSData: sortedSatMDSData,
       salesSDRData: sortedSalesSDRData,
+      targetSalesSDRData: filteredData.targetSalesSDR,
       total: filteredData.total
     });
   } catch (error) {
@@ -56,11 +57,13 @@ const extractAndFilterData = (data, teamParam) => {
   let salesSatDemsStart, salesSatDemsEnd;
   let salesSatMDSStart, salesSatMDSEnd;
   let salesSDRStart, salesSDREnd;
+  let targetSalesSDRStart, targetSalesSDREnd;
   let salesBookedDems = [];
   let salesBookedMDS = [];
   let salesSatDems = [];
   let salesSatMDS = [];
   let salesSDR = [];
+  let targetSalesSDR = [];
 
   let total = {};
 
@@ -106,6 +109,14 @@ const extractAndFilterData = (data, teamParam) => {
 
     if (data[i][0] === "Sales End") {
       salesSDREnd = i - 1;
+    }
+
+    if (data[i][0] === "Target Sales Start") {
+      targetSalesSDRStart = i + 2;
+    }
+
+    if (data[i][0] === "Target Sales End") {
+      targetSalesSDREnd = i - 1;
     }
     i++;
   }
@@ -457,5 +468,78 @@ const extractAndFilterData = (data, teamParam) => {
 
   total.salesSDR = salesSDRTotal;
 
-  return { salesBookedDems, salesBookedMDS, salesSatDems, salesSatMDS, salesSDR, total };
+  start = targetSalesSDRStart;
+  end = targetSalesSDREnd;
+  const targetSalesSDRTotal = {
+    weekly: Array.from({ length: 52 }, () => 0),
+    monthly: Array.from({ length: 12 }, () => 0),
+    quarterly: Array.from({ length: 4 }, () => 0),
+  };
+  for (; start <= end && start < data.length; start++) {
+    const [name, profileImg, team, january, february, march, april, may, june, july, august, september, october, november, december, ...salesData] = data[start]
+    const total = salesData.reduce((sum, weekSales) => {
+      let numericValue = parseFloat(weekSales.toString().replace(/[$£€,]/g, ''));
+
+      if (isNaN(numericValue)) {
+        numericValue = 0;
+      }
+
+      return sum + numericValue;
+    }, 0);
+    const quarter1 = addAllValues(january, february, march);
+    const quarter2 = addAllValues(april, may, june);
+    const quarter3 = addAllValues(july, august, september);
+    const quarter4 = addAllValues(october, november, december);
+    if (!teamParam || team.toLowerCase() === teamParam.toLowerCase()) { // Filter by team if specified
+      targetSalesSDR.push({
+        name,
+        profileImg,
+        team,
+        weekly: Array.from({ length: 52 }, () => "£0"),
+        monthly: [
+          january,
+          february,
+          march,
+          april,
+          may,
+          june,
+          july,
+          august,
+          september,
+          october,
+          november,
+          december,
+        ],
+        quarterly: [
+          convertToStrMoney("£", quarter1),
+          convertToStrMoney("£", quarter2),
+          convertToStrMoney("£", quarter3),
+          convertToStrMoney("£", quarter4),
+        ],
+        total: parseFloat(total.toFixed(2)),
+      });
+
+      salesData.forEach((weekSales, index) => {
+        if (index < 52) {
+          targetSalesSDRTotal.weekly[index] += addAllValues(weekSales);
+        }
+      });
+
+      const months = [january, february, march, april, may, june, july, august, september, october, november, december];
+      months.forEach((monthSales, index) => {
+        targetSalesSDRTotal.monthly[index] += addAllValues(monthSales);
+      });
+
+      const quarters = [
+        quarter1, quarter2, quarter3, quarter4
+      ];
+      quarters.forEach((quarterSales, index) => {
+        targetSalesSDRTotal.quarterly[index] += addAllValues(quarterSales);
+      });
+    }
+  }
+
+  total.targetSalesSDR = targetSalesSDRTotal;
+
+  return { salesBookedDems, salesBookedMDS, salesSatDems, salesSatMDS, salesSDR, targetSalesSDR, total };
 };
