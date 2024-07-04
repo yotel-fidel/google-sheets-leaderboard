@@ -68,6 +68,7 @@ const SalesTeamPage = ({ params }) => {
   const [satDemsData, setSatDemsData] = useState(null);
   const [satMDSData, setSatMDSData] = useState(null);
   const [salesSDRData, setSalesSDRData] = useState(null);
+  const [targetSalesSDRData, setTargetSalesSDRData] = useState(null);
 
   const [sortedBookedDemsData, setSortedBookedDemsData] = useState(null);
   const [sortedBookedMDSData, setSortedBookedMDSData] = useState(null);
@@ -100,6 +101,7 @@ const SalesTeamPage = ({ params }) => {
         setSatDemsData(sortDataBasedOnPeriod(data.satDemsData, PERIOD_LIST.WEEKLY, currentWeekNumber));
         setSatMDSData(sortDataBasedOnPeriod(data.satMDSData, PERIOD_LIST.WEEKLY, currentWeekNumber));
         setSalesSDRData(sortDataBasedOnPeriod(data.salesSDRData, PERIOD_LIST.WEEKLY, currentWeekNumber, true));
+        setTargetSalesSDRData(sortDataBasedOnPeriod(data.targetSalesSDRData, PERIOD_LIST.WEEKLY, currentWeekNumber, true));
 
         setSortedBookedDemsData(sortDataBasedOnPeriod(data.bookedDemsData, PERIOD_LIST.WEEKLY, currentWeekNumber));
         setSortedBookedMDSData(sortDataBasedOnPeriod(data.bookedMDSData, PERIOD_LIST.WEEKLY, currentWeekNumber));
@@ -328,7 +330,7 @@ const SalesTeamPage = ({ params }) => {
           <div className='flex flex-col sm:flex-row flex-wrap justify-between gap-2 bg-[#9e0000] rounded-sm p-2 my-2'>
             <div>
               <h2 className="text-2xl text-white font-bold">Sales</h2>
-              {totalData && <TotalScoreOrCurrencyCard data={totalData.salesSDR} timePeriod={timePeriod} isCurrency={false} className="!p-0" />}
+              {totalData && <TotalScoreOrCurrencyCard data={totalData.salesSDR} timePeriod={timePeriod} isCurrency={true} className="!p-0" />}
             </div>
             <div>
               <h2 className="text-2xl text-white font-bold text-left sm:text-right">{bookedDemsData && bookedDemsData[0] && bookedDemsData[0].team}</h2>
@@ -342,12 +344,19 @@ const SalesTeamPage = ({ params }) => {
             <div className='flex flex-wrap flex-col lg:flex-row lg:items-center'>
               <div className='self-center lg:self-start'>
                 <AwardPodium first={sortedSalesSDRData[0]} second={sortedSalesSDRData[1]} third={sortedSalesSDRData[2]} isCurrency={true} periodObject={timePeriod} className='md:flex-1 w-full md:min-w-[500px]' />
+                {(targetSalesSDRData && timePeriod.period !== PERIOD_LIST.WEEKLY.toLowerCase()) && (
+                  <div className='md:p-2 flex flex-col gap-4 mb-[1rem] md:mb-0'>
+                    <RankingCard info={sortedSalesSDRData[0]} targetSalesData={targetSalesSDRData} index={0} periodObject={timePeriod} isCurrency={true} />
+                    <RankingCard info={sortedSalesSDRData[1]} targetSalesData={targetSalesSDRData} index={1} periodObject={timePeriod} isCurrency={true} />
+                    <RankingCard info={sortedSalesSDRData[2]} targetSalesData={targetSalesSDRData} index={2} periodObject={timePeriod} isCurrency={true} />
+                  </div>
+                )}
               </div>
-              <div className='self-center lg:self-start md:flex-[2_2_0%] grid grid-cols-1 xl:grid-cols-2 gap-4'>
+              <div className='w-full max-w-[500px] lg:max-w-none self-center lg:self-start md:flex-[2_2_0%] grid grid-cols-1 xl:grid-cols-2 gap-4'>
                 {sortedSalesSDRData.map((info, index) => {
                   if (index >= 3) {
                     return (
-                      <RankingCard key={index} info={info} index={index} periodObject={timePeriod} isCurrency={true} />
+                      <RankingCard key={index} info={info} targetSalesData={targetSalesSDRData} index={index} periodObject={timePeriod} isCurrency={true} />
                     );
                   }
                   return null;
