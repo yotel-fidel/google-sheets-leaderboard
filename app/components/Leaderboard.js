@@ -33,6 +33,7 @@ const Leaderboard = () => {
   const [satDemsData, setSatDemsData] = useState(null);
   const [satMDSData, setSatMDSData] = useState(null);
   const [salesSDRData, setSalesSDRData] = useState(null);
+  const [targetSalesSDRData, setTargetSalesSDRData] = useState(null);
 
   const [sortedBookedDemsData, setSortedBookedDemsData] = useState(null);
   const [sortedBookedMDSData, setSortedBookedMDSData] = useState(null);
@@ -71,6 +72,7 @@ const Leaderboard = () => {
         setSatDemsData(sortDataBasedOnPeriod(data.satDemsData, PERIOD_LIST.WEEKLY, thisCurrentWeekNumber));
         setSatMDSData(sortDataBasedOnPeriod(data.satMDSData, PERIOD_LIST.WEEKLY, thisCurrentWeekNumber));
         setSalesSDRData(sortDataBasedOnPeriod(data.salesSDRData, PERIOD_LIST.WEEKLY, thisCurrentWeekNumber, true));
+        setTargetSalesSDRData(sortDataBasedOnPeriod(data.targetSalesSDRData, PERIOD_LIST.WEEKLY, thisCurrentWeekNumber, true));
 
         setSortedBookedDemsData(sortDataBasedOnPeriod(data.bookedDemsData, PERIOD_LIST.WEEKLY, thisCurrentWeekNumber));
         setSortedBookedMDSData(sortDataBasedOnPeriod(data.bookedMDSData, PERIOD_LIST.WEEKLY, thisCurrentWeekNumber));
@@ -312,12 +314,19 @@ const Leaderboard = () => {
             <div className='flex flex-wrap flex-col lg:flex-row lg:items-center'>
               <div className='self-center lg:self-start'>
                 <AwardPodium first={sortedSalesSDRData[0]} second={sortedSalesSDRData[1]} third={sortedSalesSDRData[2]} isCurrency={true} periodObject={timePeriod} className='md:flex-1 w-full md:min-w-[500px]' />
+                {(targetSalesSDRData && timePeriod.period !== PERIOD_LIST.WEEKLY.toLowerCase()) && (
+                  <div className='md:p-2 flex flex-col gap-4 mb-[1rem] md:mb-0'>
+                    <RankingCard info={sortedSalesSDRData[0]} targetSalesData={targetSalesSDRData} index={0} periodObject={timePeriod} isCurrency={true} />
+                    <RankingCard info={sortedSalesSDRData[1]} targetSalesData={targetSalesSDRData} index={1} periodObject={timePeriod} isCurrency={true} />
+                    <RankingCard info={sortedSalesSDRData[2]} targetSalesData={targetSalesSDRData} index={2} periodObject={timePeriod} isCurrency={true} />
+                  </div>
+                )}
               </div>
               <div className='self-center lg:self-start md:flex-[2_2_0%] grid grid-cols-1 xl:grid-cols-2 gap-4'>
                 {sortedSalesSDRData.map((info, index) => {
                   if (index >= 3) {
                     return (
-                      <RankingCard key={index} info={info} index={index} isShowTeam={true} periodObject={timePeriod} isCurrency={true} />
+                      <RankingCard key={index} info={info} targetSalesData={targetSalesSDRData} index={index} isShowTeam={true} periodObject={timePeriod} isCurrency={true} />
                     );
                   }
                   return null;
