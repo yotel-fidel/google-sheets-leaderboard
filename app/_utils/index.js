@@ -168,6 +168,19 @@ export function getCurrencyOrScore(data, periodObject, isCurrency) {
     }
 }
 
+export function getCurrencyFloatFormat(data, periodObject) {
+    switch (periodObject.period.toLowerCase()) {
+        case PERIOD_LIST.WEEKLY.toLowerCase():
+            return parseFloat(data.weekly[periodObject.number - 1].substring(1).replace(/,/g, ''));
+        case PERIOD_LIST.QUARTERLY.toLowerCase():
+            return parseFloat(data.quarterly[periodObject.number - 1].substring(1).replace(/,/g, ''));
+        case PERIOD_LIST.MONTHLY.toLowerCase():
+            return parseFloat(data.monthly[periodObject.number - 1].substring(1).replace(/,/g, ''));
+        default:
+            throw new Error("There is something wrong. Please try to check the period.");
+    }
+}
+
 export function getTotalCurrencyOrScore(data, periodObject, isCurrency) {
     // console.log("PERIOOD:", periodObject.period)
     switch (periodObject.period.toLowerCase()) {
