@@ -191,7 +191,7 @@ const Leaderboard = () => {
               <div className='self-center lg:self-start'>
                 <AwardPodium first={sortedBookedDemsData[0]} second={sortedBookedDemsData[1]} third={sortedBookedDemsData[2]} periodObject={timePeriod} className='md:flex-1 w-full md:min-w-[500px]' />
               </div>
-              <div className='self-center lg:self-start md:flex-[2_2_0%] grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4'>
+              <div className='w-full max-w-[500px] lg:max-w-none self-center lg:self-start md:flex-[2_2_0%] grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4'>
                 {sortedBookedDemsData.map((info, index) => {
                   if (index >= 3) {
                     return (
@@ -222,7 +222,7 @@ const Leaderboard = () => {
               <div className='self-center lg:self-start'>
                 <AwardPodium first={sortedBookedMDSData[0]} second={sortedBookedMDSData[1]} third={sortedBookedMDSData[2]} periodObject={timePeriod} className='md:flex-1 w-full md:min-w-[500px]' />
               </div>
-              <div className='self-center lg:self-start md:flex-[2_2_0%] grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4'>
+              <div className='w-full max-w-[500px] lg:max-w-none self-center lg:self-start md:flex-[2_2_0%] grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4'>
                 {sortedBookedMDSData.map((info, index) => {
                   if (index >= 3) {
                     return (
@@ -253,7 +253,7 @@ const Leaderboard = () => {
               <div className='self-center lg:self-start'>
                 <AwardPodium first={sortedSatDemsData[0]} second={sortedSatDemsData[1]} third={sortedSatDemsData[2]} periodObject={timePeriod} className='md:flex-1 w-full md:min-w-[500px]' />
               </div>
-              <div className='self-center lg:self-start md:flex-[2_2_0%] grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4'>
+              <div className='w-full max-w-[500px] lg:max-w-none self-center lg:self-start md:flex-[2_2_0%] grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4'>
                 {sortedSatDemsData.map((info, index) => {
                   if (index >= 3) {
                     return (
@@ -284,7 +284,7 @@ const Leaderboard = () => {
               <div className='self-center lg:self-start'>
                 <AwardPodium first={sortedSatMDSData[0]} second={sortedSatMDSData[1]} third={sortedSatMDSData[2]} periodObject={timePeriod} className='md:flex-1 w-full md:min-w-[500px]' />
               </div>
-              <div className='self-center lg:self-start md:flex-[2_2_0%] grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4'>
+              <div className='w-full max-w-[500px] lg:max-w-none self-center lg:self-start md:flex-[2_2_0%] grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4'>
                 {sortedSatMDSData.map((info, index) => {
                   if (index >= 3) {
                     return (
@@ -322,7 +322,7 @@ const Leaderboard = () => {
                   </div>
                 )}
               </div>
-              <div className='self-center lg:self-start md:flex-[2_2_0%] grid grid-cols-1 xl:grid-cols-2 gap-4'>
+              <div className='w-full max-w-[500px] lg:max-w-none self-center lg:self-start md:flex-[2_2_0%] grid grid-cols-1 xl:grid-cols-2 gap-4'>
                 {sortedSalesSDRData.map((info, index) => {
                   if (index >= 3) {
                     return (
