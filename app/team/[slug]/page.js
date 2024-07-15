@@ -2,17 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
-import { Line } from 'react-chartjs-2';
+
 import { getWeekRange, getTotalCurrencyOrScore, sortDataBasedOnPeriod, getCurrentWeekAndYear, parsePeriodString, getDateRange } from '@/app/_utils'
 import Loading from '@/app/components/Loading';
 
@@ -38,31 +28,11 @@ import RankingCard from '@/app/components/RankingCard';
 import AwardPodium from '@/app/components/AwardPodium';
 import { PERIOD_LIST, DATA_OPTION_LIST } from '@/lib/constants';
 import TotalScoreOrCurrencyCard from '@/app/components/TotalScoreOrCurrencyCard';
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-);
-
-export const options = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: 'top',
-    },
-    title: {
-      display: true,
-      text: 'Chart.js Line Chart',
-    },
-  },
-};
+import Countdown from '@/app/components/Countdown';
 
 const SalesTeamPage = ({ params }) => {
+  const [countdownIncentiveDate, setCountdownIncentiveDate] = useState(null);
+
   const [bookedDemsData, setBookedDemsData] = useState(null);
   const [bookedMDSData, setBookedMDSData] = useState(null);
   const [satDemsData, setSatDemsData] = useState(null);
@@ -95,6 +65,8 @@ const SalesTeamPage = ({ params }) => {
         const [team] = params.slug.split('_');
         const response = await fetch(`/api/getSheetDataByTeam?team=${team}`);
         const data = await response.json();
+
+        setCountdownIncentiveDate(data.countdownIncentiveDate);
 
         setBookedDemsData(sortDataBasedOnPeriod(data.bookedDemsData, PERIOD_LIST.WEEKLY, currentWeekNumber));
         setBookedMDSData(sortDataBasedOnPeriod(data.bookedMDSData, PERIOD_LIST.WEEKLY, currentWeekNumber));
@@ -199,6 +171,9 @@ const SalesTeamPage = ({ params }) => {
 
         </div>
         <TabsContent value="bookedDems" className="w-full">
+          <div className='w-full relative'>
+            {countdownIncentiveDate && <Countdown targetDate={countdownIncentiveDate} />}
+          </div>
           <div className='flex flex-col sm:flex-row flex-wrap justify-between gap-2 bg-[#9e0000] rounded-sm p-2 my-2'>
             <div>
               <h2 className="text-2xl text-white font-bold">Booked Dems</h2>
