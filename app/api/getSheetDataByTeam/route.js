@@ -37,6 +37,7 @@ export async function GET(request) {
     const sortedSalesSDRData = filteredData.salesSDR.sort((a, b) => b.total - a.total);
 
     return NextResponse.json({
+      countdownIncentiveDate: filteredData.countdownIncentiveDate,
       bookedDemsData: sortedBookedDemsData,
       bookedMDSData: sortedBookedMDSData,
       satDemsData: sortedSatDemsData,
@@ -52,6 +53,8 @@ export async function GET(request) {
 }
 
 const extractAndFilterData = (data, teamParam) => {
+  let countdownIncentiveDate;
+
   let salesBookedDemsStart, salesBookedDemsEnd;
   let salesBookedMDSStart, salesBookedMDSEnd;
   let salesSatDemsStart, salesSatDemsEnd;
@@ -70,6 +73,10 @@ const extractAndFilterData = (data, teamParam) => {
   let i = 0;
   while (i < data.length) {
     if (data[i][0] === "END") break;
+
+    if (data[i][0] === "Countdown Incentive Date") {
+      countdownIncentiveDate = data[i][1] + " " + data[i][2];
+    }
 
     if (data[i][0] === "Booked Dems Start") {
       salesBookedDemsStart = i + 2;
@@ -541,5 +548,5 @@ const extractAndFilterData = (data, teamParam) => {
 
   total.targetSalesSDR = targetSalesSDRTotal;
 
-  return { salesBookedDems, salesBookedMDS, salesSatDems, salesSatMDS, salesSDR, targetSalesSDR, total };
+  return { countdownIncentiveDate, salesBookedDems, salesBookedMDS, salesSatDems, salesSatMDS, salesSDR, targetSalesSDR, total };
 };
