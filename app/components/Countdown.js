@@ -55,8 +55,8 @@ const Countdown = ({ targetDate }) => {
 
     return (
         <div>
-            <span>Incentive Countdown: {timerComponents}</span>
-            {isTimeUp && <div><span>Time's up!</span></div>}
+            <span><b>Incentive Countdown:</b> {timerComponents}</span>
+            {/* {isTimeUp && <div><span>Time's up!</span></div>} */}
         </div>
     );
 };
