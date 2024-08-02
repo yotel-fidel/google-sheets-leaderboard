@@ -193,7 +193,7 @@ const Leaderboard = () => {
               </div>
               <div className='w-full max-w-[500px] lg:max-w-none self-center lg:self-start md:flex-[2_2_0%] grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4'>
                 {sortedBookedDemsData.map((info, index) => {
-                  if (index >= 3) {
+                  if (index >= 0) {
                     return (
                       <RankingCard key={index} info={info} index={index} isShowTeam={true} periodObject={timePeriod} />
                     );
@@ -224,7 +224,7 @@ const Leaderboard = () => {
               </div>
               <div className='w-full max-w-[500px] lg:max-w-none self-center lg:self-start md:flex-[2_2_0%] grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4'>
                 {sortedBookedMDSData.map((info, index) => {
-                  if (index >= 3) {
+                  if (index >= 0) {
                     return (
                       <RankingCard key={index} info={info} index={index} isShowTeam={true} periodObject={timePeriod} />
                     );
@@ -255,7 +255,7 @@ const Leaderboard = () => {
               </div>
               <div className='w-full max-w-[500px] lg:max-w-none self-center lg:self-start md:flex-[2_2_0%] grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4'>
                 {sortedSatDemsData.map((info, index) => {
-                  if (index >= 3) {
+                  if (index >= 0) {
                     return (
                       <RankingCard key={index} info={info} index={index} isShowTeam={true} periodObject={timePeriod} />
                     );
@@ -286,7 +286,7 @@ const Leaderboard = () => {
               </div>
               <div className='w-full max-w-[500px] lg:max-w-none self-center lg:self-start md:flex-[2_2_0%] grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4'>
                 {sortedSatMDSData.map((info, index) => {
-                  if (index >= 3) {
+                  if (index >= 0) {
                     return (
                       <RankingCard key={index} info={info} index={index} isShowTeam={true} periodObject={timePeriod} />
                     );
@@ -324,7 +324,7 @@ const Leaderboard = () => {
               </div>
               <div className='w-full max-w-[500px] lg:max-w-none self-center lg:self-start md:flex-[2_2_0%] grid grid-cols-1 xl:grid-cols-2 gap-4'>
                 {sortedSalesSDRData.map((info, index) => {
-                  if (index >= 3) {
+                  if (index >= 0) {
                     return (
                       <RankingCard key={index} info={info} targetSalesData={targetSalesSDRData} index={index} isShowTeam={true} periodObject={timePeriod} isCurrency={true} />
                     );
